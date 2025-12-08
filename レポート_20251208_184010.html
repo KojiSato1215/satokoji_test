@@ -1,0 +1,1508 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>ファクトチェックレポート - 証券_会社_松井_証券</title>
+    <style>
+        * { box-sizing: border-box; }
+        body { 
+            font-family: 'Hiragino Sans', 'Meiryo', 'Yu Gothic', sans-serif; 
+            line-height: 1.6; 
+            padding: 40px; 
+            max-width: 1200px; 
+            margin: 0 auto;
+            background: #f5f5f5;
+        }
+        .report-container {
+            background: white;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        h1 { 
+            color: #333; 
+            border-bottom: 3px solid #1976d2; 
+            padding-bottom: 15px;
+            margin-bottom: 30px;
+        }
+        h2 { 
+            color: #1976d2; 
+            margin-top: 40px;
+            padding: 10px 0;
+            border-bottom: 1px solid #ddd;
+        }
+        h3 { color: #333; margin-top: 30px; }
+        h4 { color: #555; margin-top: 25px; }
+        
+        .summary-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+        .card {
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .card-total { background: #e3f2fd; border: 2px solid #1976d2; }
+        .card-high { background: #ffebee; border: 2px solid #c62828; }
+        .card-medium { background: #fff3e0; border: 2px solid #ef6c00; }
+        .card-low { background: #e8f5e9; border: 2px solid #2e7d32; }
+        .card-rewrite { background: #f3e5f5; border: 2px solid #7b1fa2; }
+        .card-number { font-size: 2.5em; font-weight: bold; }
+        .card-label { font-size: 0.9em; color: #666; margin-top: 5px; }
+        
+        table { 
+            width: 100%; 
+            border-collapse: collapse; 
+            margin: 20px 0;
+            font-size: 14px;
+        }
+        th, td { 
+            border: 1px solid #ddd; 
+            padding: 12px; 
+            text-align: left; 
+            vertical-align: top;
+        }
+        th { 
+            background: #f5f5f5; 
+            font-weight: bold;
+        }
+        tr:hover { background: #fafafa; }
+        
+        .severity-high { 
+            background: #ffebee; 
+            color: #c62828; 
+            padding: 3px 8px; 
+            border-radius: 4px; 
+            font-weight: bold;
+            font-size: 12px;
+        }
+        .severity-medium { 
+            background: #fff3e0; 
+            color: #ef6c00; 
+            padding: 3px 8px; 
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 12px;
+        }
+        .severity-low { 
+            background: #e8f5e9; 
+            color: #2e7d32; 
+            padding: 3px 8px; 
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 12px;
+        }
+        
+        .current-text { 
+            background: #ffebee; 
+            padding: 8px; 
+            border-radius: 4px; 
+            margin: 5px 0;
+            border-left: 3px solid #c62828;
+        }
+        .suggestion-text { 
+            background: #e8f5e9; 
+            padding: 8px; 
+            border-radius: 4px; 
+            margin: 5px 0;
+            border-left: 3px solid #2e7d32;
+        }
+        .rewrite-badge {
+            background: #7b1fa2;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            margin-left: 5px;
+        }
+        
+        .notes {
+            background: #e3f2fd;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 30px 0;
+            border-left: 4px solid #1976d2;
+        }
+        
+        /* 差分表示スタイル */
+        .diff-old {
+            background: #ffcdd2;
+            color: #666;
+            text-decoration: line-through;
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+        .diff-new {
+            background: #c8e6c9;
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+        .diff-block {
+            border: 2px solid #7b1fa2;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 20px 0;
+            background: #fafafa;
+        }
+        .diff-label {
+            font-weight: bold;
+            color: #7b1fa2;
+            margin-bottom: 10px;
+        }
+        .diff-arrow {
+            text-align: center;
+            font-size: 1.5em;
+            color: #7b1fa2;
+            margin: 10px 0;
+        }
+        .rewrite-block .diff-old {
+            display: block;
+            padding: 15px;
+            margin: 10px 0;
+            white-space: pre-wrap;
+        }
+        .rewrite-block .diff-new {
+            display: block;
+            padding: 15px;
+            margin: 10px 0;
+            white-space: pre-wrap;
+        }
+        
+        /* 本文表示 */
+        .article-section {
+            background: #fafafa;
+            padding: 30px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            margin: 20px 0;
+            max-height: 800px;
+            overflow-y: auto;
+        }
+        .article-table {
+            font-size: 13px;
+        }
+        .article-table td {
+            padding: 8px;
+        }
+        
+        /* URL一覧 */
+        .url-list {
+            max-height: 400px;
+            overflow-y: auto;
+            background: #fafafa;
+            padding: 15px;
+            border-radius: 8px;
+        }
+        .url-list a {
+            color: #1976d2;
+            text-decoration: none;
+            font-size: 13px;
+        }
+        .url-list a:hover {
+            text-decoration: underline;
+        }
+        .url-item {
+            padding: 5px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .toc {
+            background: #f5f5f5;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        .toc a {
+            color: #1976d2;
+            text-decoration: none;
+        }
+        .toc a:hover {
+            text-decoration: underline;
+        }
+        
+        .footer {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #ddd;
+            color: #666;
+            font-size: 12px;
+            text-align: center;
+        }
+        
+        @media print {
+            body { background: white; padding: 20px; }
+            .report-container { box-shadow: none; page-break-inside: avoid; }
+            .article-section { max-height: none; }
+            .url-list { max-height: none; }
+        }
+    </style>
+</head>
+<body>
+<div class="report-container">
+    <h1>📋 ファクトチェックレポート</h1>
+    <p><strong>対象記事:</strong> 証券_会社_松井_証券</p>
+    <p><strong>作成日時:</strong> 2025年12月08日 18:40</p>
+    <p><strong>参照URL数:</strong> 254件</p>
+    
+    <div class="toc">
+        <strong>📑 目次</strong>
+        <ul>
+            <li><a href="#summary">サマリー</a></li>
+            <li><a href="#issues-high">重要度：高</a></li>
+            <li><a href="#issues-medium">重要度：中</a></li>
+            <li><a href="#article-diff">差分表示付き本文</a></li>
+            <li><a href="#urls">取得URL一覧</a></li>
+        </ul>
+    </div>
+    
+    <h2 id="summary">📊 サマリー</h2>
+    <div class="summary-cards">
+        <div class="card card-total">
+            <div class="card-number">21</div>
+            <div class="card-label">総指摘数</div>
+        </div>
+        <div class="card card-high">
+            <div class="card-number">12</div>
+            <div class="card-label">重要度：高</div>
+        </div>
+        <div class="card card-medium">
+            <div class="card-number">8</div>
+            <div class="card-label">重要度：中</div>
+        </div>
+        <div class="card card-low">
+            <div class="card-number">1</div>
+            <div class="card-label">重要度：低</div>
+        </div>
+        <div class="card card-rewrite">
+            <div class="card-number">1</div>
+            <div class="card-label">要書き換え</div>
+        </div>
+    </div>
+    
+    <div class='notes'><strong>📝 総評:</strong><br>記事全体を通して「米国株の取り扱いがない」という重大な事実誤認が複数箇所で見られます。これは記事の信頼性を大きく損なうため、最優先で修正が必要です。特にデメリットを解説するセクションは、この誤った前提に基づいて構成されているため、セクション全体の書き換えを提案しました。その他、サポートの受賞年数やサービス名、手数料の細かな条件など、情報が古くなっている箇所が散見されるため、最新の公式サイト情報に基づいた更新が必要です。</div>
+    
+    <h2 id="issues-high">🔴 重要度：高（12件）</h2>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>重要度</th>
+                <th>カテゴリ</th>
+                <th>場所</th>
+                <th>内容</th>
+            </tr>
+        </thead>
+        <tbody>
+            
+        <tr>
+            <td style="width:40px; text-align:center;">1</td>
+            <td style="width:80px;"><span class="severity-high">高</span></td>
+            <td style="width:80px;">取扱商品</td>
+            <td style="width:120px;">まずは結論｜松井証券の評判をわかりやすく解説</td>
+            <td>
+                <div><strong>問題:</strong> 米国株の取り扱いがあるにもかかわらず、「米国株を中心にグローバルな投資をしたい人」にとってはデメリットがあると記載されている。前提が誤っている。</div>
+                <div class="current-text"><strong>現在:</strong> 「米国株を中心にグローバルな投資をしたい人」にとっては、手数料が割高になったり、そもそも取扱商品がなかったりといった明確なデメリットが存在します。</div>
+                <div class="suggestion-text"><strong>修正案:</strong> 「米国株の取扱銘柄の豊富さを重視する人」にとっては、主要ネット証券と比較して選択肢が限られるというデメリットが存在します。</div>
+                <div style="font-size:11px; color:#666; margin-top:5px;"><strong>出典:</strong> https://www.matsui.co.jp/us-stock/ に米国株（現物・信用）、米国ETFのサービス案内あり。</div>
+            </td>
+        </tr>
+        <tr>
+            <td style="width:40px; text-align:center;">2</td>
+            <td style="width:80px;"><span class="severity-high">高</span></td>
+            <td style="width:80px;">取扱商品</td>
+            <td style="width:120px;">松井証券の悪い評判・口コミの要点</td>
+            <td>
+                <div><strong>問題:</strong> 米国株の取り扱いがあるにもかかわらず、「取り扱いがない」と記載されている。</div>
+                <div class="current-text"><strong>現在:</strong> 米国株の取り扱いがない：GAFAM（Google, Amazon, Facebook, Apple, Microsoft）など、世界を代表する企業に直接投資できない点は、グローバル投資家にとって最大のデメリットです。</div>
+                <div class="suggestion-text"><strong>修正案:</strong> 米国株の取扱銘柄が限定的：主要ネット証券と比較すると、個別株やETFの取扱銘柄数が少なく、幅広い銘柄から選びたい投資家にとってはデメリットとなる可能性があります。</div>
+                <div style="font-size:11px; color:#666; margin-top:5px;"><strong>出典:</strong> https://www.matsui.co.jp/us-stock/ に米国株（現物・信用）、米国ETFのサービス案内あり。</div>
+            </td>
+        </tr>
+        <tr>
+            <td style="width:40px; text-align:center;">3</td>
+            <td style="width:80px;"><span class="severity-high">高</span></td>
+            <td style="width:80px;">取扱商品</td>
+            <td style="width:120px;">松井証券の基本情報まとめ</td>
+            <td>
+                <div><strong>問題:</strong> 米国株の取り扱いがあるにもかかわらず、「取り扱いなし」と記載されている。</div>
+                <div class="current-text"><strong>現在:</strong> 米国株式	取り扱いなし</div>
+                <div class="suggestion-text"><strong>修正案:</strong> 米国株式	取り扱いあり（現物・信用）</div>
+                <div style="font-size:11px; color:#666; margin-top:5px;"><strong>出典:</strong> https://www.matsui.co.jp/product/ に「米国株 現物取引」「米国株 信用取引」「米国株 米国ETF」の記載あり。</div>
+            </td>
+        </tr>
+        <tr>
+            <td style="width:40px; text-align:center;">4</td>
+            <td style="width:80px;"><span class="severity-high">高</span></td>
+            <td style="width:80px;">取扱商品</td>
+            <td style="width:120px;">松井証券の基本情報まとめ</td>
+            <td>
+                <div><strong>問題:</strong> 米国株の取り扱いがあるにもかかわらず、「取り扱いがない」という誤った前提で結論を導いている。</div>
+                <div class="current-text"><strong>現在:</strong> この基本情報からも、松井証券が**国内株式の少額取引に強み**を持ち、一方で**米国株の取り扱いがない**という特徴が明確に見て取れます。</div>
+                <div class="suggestion-text"><strong>修正案:</strong> この基本情報からも、松井証券が**国内株式の少額取引に強み**を持ち、一方で**米国株の取扱銘柄は主要ネット証券に比べて限定的である**という特徴が見て取れます。</div>
+                <div style="font-size:11px; color:#666; margin-top:5px;"><strong>出典:</strong> https://www.matsui.co.jp/us-stock/ に米国株サービスの案内あり。</div>
+            </td>
+        </tr>
+        <tr>
+            <td style="width:40px; text-align:center;">9</td>
+            <td style="width:80px;"><span class="severity-high">高</span></td>
+            <td style="width:80px;">サービス内容</td>
+            <td style="width:120px;">松井証券ポイントが貯まる・使える</td>
+            <td>
+                <div><strong>問題:</strong> ポイントが貯まるクレジットカード名が異なる。公式サイトではクレカ積立の対象は「JCBオリジナルシリーズ」となっている。</div>
+                <div class="current-text"><strong>現在:</strong> 「MATSUI SECURITIES CARD」の利用</div>
+                <div class="suggestion-text"><strong>修正案:</strong> JCBカードでのクレカ積立</div>
+                <div style="font-size:11px; color:#666; margin-top:5px;"><strong>出典:</strong> https://www.matsui.co.jp/fund/card-investments/ に「決済には株式会社ジェーシービー(以下、JCB社)が発行する「...</div>
+            </td>
+        </tr>
+        <tr>
+            <td style="width:40px; text-align:center;">11</td>
+            <td style="width:80px;"><span class="severity-high">高</span><span class="rewrite-badge">要書き換え</span></td>
+            <td style="width:80px;">取扱商品</td>
+            <td style="width:120px;">口コミからわかる松井証券のデメリット4選</td>
+            <td>
+                <div><strong>問題:</strong> セクション全体が「米国株の取り扱いがない」という誤った前提で書かれている。単純置換すると文脈が矛盾する。</div>
+                <div class="current-text"><strong>現在:</strong> ### **② 米国株や海外ETFの取り扱いがない**<br>
+<br>
+現代の株式投資において、ポートフォリオのグローバルな分散はリスク管理の基本とされています。その中心となるのが、世界経済を牽引する米国株です。<br>
+<br>
+しかし、**松井証券では、AppleやNVIDIAといった米国の個別株式や、VOO（S&amp;P 500...</div>
+                <div class="suggestion-text"><strong>修正案:</strong> （セクション書き換え参照）</div>
+                <div style="font-size:11px; color:#666; margin-top:5px;"><strong>出典:</strong> https://www.matsui.co.jp/us-stock/ に米国株（現物・信用）、米国ETFのサービス案内あり。取扱銘柄数が他社より少ないことは業界...</div>
+            </td>
+        </tr>
+        <tr>
+            <td style="width:40px; text-align:center;">12</td>
+            <td style="width:80px;"><span class="severity-high">高</span></td>
+            <td style="width:80px;">取扱商品</td>
+            <td style="width:120px;">デメリット④ 単元未満株の取り扱いがない</td>
+            <td>
+                <div><strong>問題:</strong> 単元未満株の約定タイミングが誤っている。「翌営業日の始値」ではなく、当日の「前場終値」または「後場終値」を基準とした価格となる。</div>
+                <div class="current-text"><strong>現在:</strong> 松井証券の単元未満株は、リアルタイムでの取引（ザラ場取引）はできず、注文した翌営業日の始値での約定となります。</div>
+                <div class="suggestion-text"><strong>修正案:</strong> 松井証券の単元未満株はリアルタイムでの取引（ザラ場取引）はできず、注文時間に応じて当日の前場終値または後場終値を基準とした価格で約定します。</div>
+                <div style="font-size:11px; color:#666; margin-top:5px;"><strong>出典:</strong> https://www.matsui.co.jp/stock/domestic/tangen/ の「4.約定価格・時間」に「前場の終値から一定の値を差引いた価格...</div>
+            </td>
+        </tr>
+        <tr>
+            <td style="width:40px; text-align:center;">13</td>
+            <td style="width:80px;"><span class="severity-high">高</span></td>
+            <td style="width:80px;">手数料</td>
+            <td style="width:120px;">デメリット④ 単元未満株の取り扱いがない</td>
+            <td>
+                <div><strong>問題:</strong> 単元未満株の売却手数料について、公式サイトでは「最低手数料なし」とされているが、記事では「最低手数料55円」と記載されている。</div>
+                <div class="current-text"><strong>現在:</strong> 売却時には約定代金の0.55%（税込、最低手数料55円）の手数料がかかります</div>
+                <div class="suggestion-text"><strong>修正案:</strong> 売却時には約定代金の0.55%（税込）の手数料がかかります（最低手数料なし）。</div>
+                <div style="font-size:11px; color:#666; margin-top:5px;"><strong>出典:</strong> https://www.matsui.co.jp/stock/domestic/tangen/ の「1.手数料」に「最低手数料なし」と記載あり。</div>
+            </td>
+        </tr>
+        <tr>
+            <td style="width:40px; text-align:center;">15</td>
+            <td style="width:80px;"><span class="severity-high">高</span></td>
+            <td style="width:80px;">手数料</td>
+            <td style="width:120px;">NISAで株式投資を始めたい人</td>
+            <td>
+                <div><strong>問題:</strong> 米国株の取り扱いがないという誤った前提に基づき、NISAでの米国株取引について不正確な注釈を記載している。</div>
+                <div class="current-text"><strong>現在:</strong> NISA口座における日本株、米国株（※）、投資信託の売買手数料をすべて無料としています。<br>
+（※注：松井証券では米国個別株の取り扱いはありませんが、米国株に投資する投資信託は購入可能で、その買付手数料が無料です。）</div>
+                <div class="suggestion-text"><strong>修正案:</strong> NISA口座における日本株、米国株、投資信託の売買手数料をすべて無料としています。</div>
+                <div style="font-size:11px; color:#666; margin-top:5px;"><strong>出典:</strong> https://www.matsui.co.jp/us-stock/domestic/fee/ に「新NISA口座なら売買手数料無料！」と記載あり。また、htt...</div>
+            </td>
+        </tr>
+        <tr>
+            <td style="width:40px; text-align:center;">16</td>
+            <td style="width:80px;"><span class="severity-high">高</span></td>
+            <td style="width:80px;">手数料</td>
+            <td style="width:120px;">信用取引の手数料が無料</td>
+            <td>
+                <div><strong>問題:</strong> 見出しが「信用取引の手数料が無料」となっており、全ての信用取引が無料であるかのような誤解を招く。無料なのは主に「一日信用取引」。</div>
+                <div class="current-text"><strong>現在:</strong> 信用取引の手数料が無料</div>
+                <div class="suggestion-text"><strong>修正案:</strong> 一日信用取引の手数料・金利が無料</div>
+                <div style="font-size:11px; color:#666; margin-top:5px;"><strong>出典:</strong> https://www.matsui.co.jp/stock/margin/d-margin/ に「一日信用取引」の手数料・金利・貸株料が0円である旨の記載があ...</div>
+            </td>
+        </tr>
+        <tr>
+            <td style="width:40px; text-align:center;">19</td>
+            <td style="width:80px;"><span class="severity-high">高</span></td>
+            <td style="width:80px;">取扱商品</td>
+            <td style="width:120px;">松井証券と他の主要ネット証券を比較</td>
+            <td>
+                <div><strong>問題:</strong> 比較表において、米国株の取り扱いが「なし」と記載されている。</div>
+                <div class="current-text"><strong>現在:</strong> なし</div>
+                <div class="suggestion-text"><strong>修正案:</strong> 〇 あり</div>
+                <div style="font-size:11px; color:#666; margin-top:5px;"><strong>出典:</strong> https://www.matsui.co.jp/us-stock/ に米国株サービスの案内あり。</div>
+            </td>
+        </tr>
+        <tr>
+            <td style="width:40px; text-align:center;">21</td>
+            <td style="width:80px;"><span class="severity-high">高</span></td>
+            <td style="width:80px;">取扱商品</td>
+            <td style="width:120px;">まとめ</td>
+            <td>
+                <div><strong>問題:</strong> まとめのデメリット部分で、米国株の取り扱いがないと記載されている。</div>
+                <div class="current-text"><strong>現在:</strong> 米国個別株や海外ETFの取り扱いがない。</div>
+                <div class="suggestion-text"><strong>修正案:</strong> 米国株の取扱銘柄数が主要ネット証券に比べて少ない。</div>
+                <div style="font-size:11px; color:#666; margin-top:5px;"><strong>出典:</strong> https://www.matsui.co.jp/us-stock/ に米国株サービスの案内あり。</div>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    
+    <h2 id="issues-medium">🟠 重要度：中（8件）</h2>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>重要度</th>
+                <th>カテゴリ</th>
+                <th>場所</th>
+                <th>内容</th>
+            </tr>
+        </thead>
+        <tbody>
+            
+        <tr>
+            <td style="width:40px; text-align:center;">5</td>
+            <td style="width:80px;"><span class="severity-medium">中</span></td>
+            <td style="width:80px;">その他</td>
+            <td style="width:120px;">サポート体制が手厚い</td>
+            <td>
+                <div><strong>問題:</strong> HDI格付けの連続受賞年数が古い。公式サイトでは「15年連続」となっている。</div>
+                <div class="current-text"><strong>現在:</strong> 13年連続で最高評価の三つ星を獲得</div>
+                <div class="suggestion-text"><strong>修正案:</strong> 15年連続で最高評価の三つ星を獲得</div>
+                <div style="font-size:11px; color:#666; margin-top:5px;"><strong>出典:</strong> https://www.matsui.co.jp/first/ に「15年連続で獲得しました」と記載あり。</div>
+            </td>
+        </tr>
+        <tr>
+            <td style="width:40px; text-align:center;">6</td>
+            <td style="width:80px;"><span class="severity-medium">中</span></td>
+            <td style="width:80px;">サービス内容</td>
+            <td style="width:120px;">投資信託の信託報酬が現金で還元される</td>
+            <td>
+                <div><strong>問題:</strong> サービスの正式名称が「最大1%貯まる投信残高ポイントサービス」であり、「投信毎月現金還元サービス」は古い名称の可能性がある。</div>
+                <div class="current-text"><strong>現在:</strong> 「投信毎月現金還元サービス」</div>
+                <div class="suggestion-text"><strong>修正案:</strong> 「最大1%貯まる投信残高ポイントサービス」</div>
+                <div style="font-size:11px; color:#666; margin-top:5px;"><strong>出典:</strong> https://www.matsui.co.jp/fund/fund-value-point/ のページタイトルが「最大1%貯まる投信残高ポイントサービス」とな...</div>
+            </td>
+        </tr>
+        <tr>
+            <td style="width:40px; text-align:center;">7</td>
+            <td style="width:80px;"><span class="severity-medium">中</span></td>
+            <td style="width:80px;">サービス内容</td>
+            <td style="width:120px;">投資信託の信託報酬が現金で還元される</td>
+            <td>
+                <div><strong>問題:</strong> 参照先のサービス名が古い可能性がある。</div>
+                <div class="current-text"><strong>現在:</strong> （参照：松井証券公式サイト 投信毎月現金還元サービス）</div>
+                <div class="suggestion-text"><strong>修正案:</strong> （参照：松井証券公式サイト 最大1%貯まる投信残高ポイントサービス）</div>
+                <div style="font-size:11px; color:#666; margin-top:5px;"><strong>出典:</strong> https://www.matsui.co.jp/fund/fund-value-point/</div>
+            </td>
+        </tr>
+        <tr>
+            <td style="width:40px; text-align:center;">8</td>
+            <td style="width:80px;"><span class="severity-medium">中</span></td>
+            <td style="width:80px;">その他</td>
+            <td style="width:120px;">サポートの電話が繋がりにくいことがある</td>
+            <td>
+                <div><strong>問題:</strong> HDI格付けの連続受賞年数が古い。公式サイトでは「15年連続」となっている。</div>
+                <div class="current-text"><strong>現在:</strong> HDI格付けで13年連続最高評価</div>
+                <div class="suggestion-text"><strong>修正案:</strong> HDI格付けで15年連続最高評価</div>
+                <div style="font-size:11px; color:#666; margin-top:5px;"><strong>出典:</strong> https://www.matsui.co.jp/first/ に「15年連続で獲得しました」と記載あり。</div>
+            </td>
+        </tr>
+        <tr>
+            <td style="width:40px; text-align:center;">14</td>
+            <td style="width:80px;"><span class="severity-medium">中</span></td>
+            <td style="width:80px;">その他</td>
+            <td style="width:120px;">顧客サポートが充実している</td>
+            <td>
+                <div><strong>問題:</strong> HDI格付けの連続受賞年数が古い。公式サイトでは「15年連続」となっている。</div>
+                <div class="current-text"><strong>現在:</strong> HDI-Japanによる格付けで13年連続最高評価を獲得している事実</div>
+                <div class="suggestion-text"><strong>修正案:</strong> HDI-Japanによる格付けで15年連続最高評価を獲得している事実</div>
+                <div style="font-size:11px; color:#666; margin-top:5px;"><strong>出典:</strong> https://www.matsui.co.jp/first/ に「15年連続で獲得しました」と記載あり。</div>
+            </td>
+        </tr>
+        <tr>
+            <td style="width:40px; text-align:center;">17</td>
+            <td style="width:80px;"><span class="severity-medium">中</span></td>
+            <td style="width:80px;">サービス内容</td>
+            <td style="width:120px;">投資信託の信託報酬が現金やポイントで還元される</td>
+            <td>
+                <div><strong>問題:</strong> サービスの正式名称が「最大1%貯まる投信残高ポイントサービス」であり、「投信毎月現金還元サービス」は古い名称の可能性がある。</div>
+                <div class="current-text"><strong>現在:</strong> 投信毎月現金還元サービス</div>
+                <div class="suggestion-text"><strong>修正案:</strong> 最大1%貯まる投信残高ポイントサービス</div>
+                <div style="font-size:11px; color:#666; margin-top:5px;"><strong>出典:</strong> https://www.matsui.co.jp/fund/fund-value-point/ のページタイトルが「最大1%貯まる投信残高ポイントサービス」とな...</div>
+            </td>
+        </tr>
+        <tr>
+            <td style="width:40px; text-align:center;">18</td>
+            <td style="width:80px;"><span class="severity-medium">中</span></td>
+            <td style="width:80px;">その他</td>
+            <td style="width:120px;">手厚いサポートを受けたい投資初心者</td>
+            <td>
+                <div><strong>問題:</strong> HDI格付けの連続受賞年数が古い。公式サイトでは「15年連続」となっている。</div>
+                <div class="current-text"><strong>現在:</strong> HDI格付けで13年連続最高評価を獲得している</div>
+                <div class="suggestion-text"><strong>修正案:</strong> HDI格付けで15年連続最高評価を獲得している</div>
+                <div style="font-size:11px; color:#666; margin-top:5px;"><strong>出典:</strong> https://www.matsui.co.jp/first/ に「15年連続で獲得しました」と記載あり。</div>
+            </td>
+        </tr>
+        <tr>
+            <td style="width:40px; text-align:center;">20</td>
+            <td style="width:80px;"><span class="severity-medium">中</span></td>
+            <td style="width:80px;">会社情報</td>
+            <td style="width:120px;">松井証券の基本情報まとめ</td>
+            <td>
+                <div><strong>問題:</strong> 資本金の情報が古い。公式サイトでは2024年3月末時点の情報が記載されている。</div>
+                <div class="current-text"><strong>現在:</strong> 121億3,348万円（2023年9月末時点）</div>
+                <div class="suggestion-text"><strong>修正案:</strong> 121億3,348万円（2024年3月31日現在）</div>
+                <div style="font-size:11px; color:#666; margin-top:5px;"><strong>出典:</strong> https://www.matsui.co.jp/first/ の「健全な財務状況」セクションに「自己資本規制比率は371.7%です。（2025年9月末現在）」...</div>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    
+    <h2>🟢 重要度：低（1件）</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>重要度</th>
+                <th>カテゴリ</th>
+                <th>場所</th>
+                <th>内容</th>
+            </tr>
+        </thead>
+        <tbody>
+            
+        <tr>
+            <td style="width:40px; text-align:center;">10</td>
+            <td style="width:80px;"><span class="severity-low">低</span></td>
+            <td style="width:80px;">サービス内容</td>
+            <td style="width:120px;">松井証券ポイントが貯まる・使える</td>
+            <td>
+                <div><strong>問題:</strong> ポイント交換先に「PayPayポイント」が記載されているが、公式サイトで確認できない。</div>
+                <div class="current-text"><strong>現在:</strong> PayPayポイントへの交換</div>
+                <div class="suggestion-text"><strong>修正案:</strong> （PayPayポイントへの交換は公式サイトで確認できないため削除を推奨）</div>
+                <div style="font-size:11px; color:#666; margin-top:5px;"><strong>出典:</strong> 公式サイトのポイント関連ページにPayPayポイントへの交換に関する記載が見当たらない。</div>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    
+    <h2 id="article-diff">📄 差分表示付き本文</h2>
+    <p>
+        <span class="diff-old">赤背景+取り消し線</span> = 削除部分 / 
+        <span class="diff-new">緑背景</span> = 追加部分
+    </p>
+    <div class="article-section">
+        <h2>**松井証券の評判はやばい？口コミからわかるメリット・デメリットを解説**</h2>
+<br>
+<p>「松井証券は手数料が安いって聞くけど、本当？」「老舗だから安心できるけど、ツールは使いやすいの？」など、松井証券の利用を検討しているものの、実際の評判が気になっている方も多いのではないでしょうか。特にネット上では「やばい」といったネガティブなキーワードも見受けられ、不安を感じるかもしれません。</p>
+<br>
+<p>この記事では、松井証券に関する様々な評判や口コミを徹底的に調査し、そこから見えてくる具体的なメリット・デメリットを網羅的に解説します。手数料体系や取扱商品、サポート体制、ツールの使い勝手まで、投資家が本当に知りたい情報を深掘りしていきます。</p>
+<br>
+<p>この記事を最後まで読めば、松井証券が本当に自分に合った証券会社なのかを客観的に判断できるようになります。口座開設で後悔しないためにも、ぜひ参考にしてください。</p>
+<br>
+<h3>**まずは結論｜松井証券の評判をわかりやすく解説**</h3>
+<br>
+<p>松井証券の評判を調査すると、利用者によって評価が大きく分かれることがわかります。これは、松井証券が**特定の投資スタイルに特化したユニークなサービス**を提供しているためです。</p>
+<br>
+<p>結論から言うと、松井証券は「**1日の取引金額が50万円以下のデイトレーダーや初心者**」「**25歳以下の若年層投資家**」「**IPO（新規公開株）投資で一攫千金を狙いたい人**」にとっては、他の証券会社を圧倒するほどのメリットがある非常に優れた証券会社です。</p>
+<br>
+<p>一方で、「**1日に50万円を超える大きな金額で取引するアクティブトレーダー**」や「**米国株を中心にグローバルな投資をしたい人**」にとっては、手数料が割高になったり、そもそも取扱商品がなかったりといった明確なデメリットが存在します。</p>
+<br>
+<p>つまり、松井証券が「やばい」と言われるのは、良い意味でも悪い意味でも、そのサービスが**非常に尖っている**からです。自分の投資スタイルに合致すれば最高のパートナーになりますが、合わない場合は使いにくいと感じる可能性が高いでしょう。</p>
+<br>
+<p>ここでは、松井証券の良い評判と悪い評判の要点をまとめます。</p>
+<br>
+<h4>**松井証券の良い評判・口コミの要点**</h4>
+<br>
+<p>松井証券の良い評判として特に多く見られたのは、手数料の安さに関するものです。特定の条件下では業界最安水準、あるいは完全に無料となる点が非常に高く評価されています。</p>
+<br>
+<ul>
+<li>  **1日の取引金額50万円まで手数料が無料**：少額で取引する投資家やデイトレーダーにとって、コストを気にせず取引できるのは大きな魅力です。</li>
+<li>  **25歳以下は手数料が完全無料**：若年層の資産形成を強力に後押しする画期的なサービスで、若い世代から絶大な支持を得ています。</li>
+<li>  **IPOの抽選が完全平等**：預かり資産や取引実績に関係なく、誰にでも公平に当選のチャンスがあるため、初心者でも参加しやすいです。</li>
+<li>  **投資信託の信託報酬が還元される**：長期で投信を保有するだけで、コストの一部が現金やポイントで戻ってくるため、実質的なリターン向上に繋がります。</li>
+<li>  **サポート体制が手厚い**：創業100年以上の歴史に裏打ちされた質の高いサポートが受けられます。特に初心者向けの「株の取引相談窓口」は評価が高いです。</li>
+</ul>
+<br>
+<h4>**松井証券の悪い評判・口コミの要点**</h4>
+<br>
+<p>一方で、松井証券には改善を望む声や、特定の投資家にとっては明確なデメリットとなる点も存在します。</p>
+<br>
+<ul>
+<li>  **1日の取引金額50万円を超えると手数料が割高**：50万円までは無料という大きなメリットの裏返しで、それを超える取引では他のネット証券より手数料が高くなる傾向があります。</li>
+<li>  **米国株の取り扱いがない**：GAFAM（Google, Amazon, Facebook, Apple, Microsoft）など、世界を代表する企業に直接投資できない点は、グローバル投資家にとって最大のデメリットです。</li>
+<li>  **アプリやツールが使いにくい**：高機能である一方、UI（ユーザーインターフェース）が古い、直感的に操作しづらいといった声が一部のユーザーから挙がっています。</li>
+<li>  **サポートの電話が繋がりにくいことがある**：サポートの質は高いと評判ですが、相場が急変した際など、問い合わせが集中する時間帯は電話が繋がりにくくなるケースがあるようです。</li>
+</ul>
+<br>
+<p>このように、松井証券はメリットとデメリットが非常にはっきりしています。以降の章で、これらの評判や特徴をさらに詳しく掘り下げていきますので、ご自身の投資スタイルと照らし合わせながら読み進めてみてください。</p>
+<br>
+<h3>**松井証券とは**</h3>
+<br>
+<p>松井証券の評判を深く理解するためには、まず同社がどのような歴史を持ち、どのような特徴を持つ証券会社なのかを知ることが重要です。ここでは、松井証券の歴史的背景と会社の基本情報について解説します。</p>
+<br>
+<h4>**100年以上の歴史を持つ老舗証券会社**</h4>
+<br>
+<p>松井証券は、**1918年（大正7年）に創業された、100年以上の非常に長い歴史を持つ証券会社**です。その長い歴史の中で、常に業界の常識を覆す革新的なサービスを提供し続けてきました。</p>
+<br>
+<p>特筆すべきは、**1995年に日本で初めて本格的なインターネット株式取引サービス「ネットストック」を開始**したことです。当時はまだインターネット自体が普及し始めたばかりの時代であり、対面取引や電話注文が主流だった証券業界において、この取り組みはまさに革命的でした。これにより、個人投資家が時間や場所にとらわれず、安い手数料で自由に株式取引を行える道が拓かれたのです。</p>
+<br>
+<p>このように、松井証券は「老舗」という安定感や信頼性に加え、「ネット証券のパイオニア」という革新性を併せ持つ、非常にユニークな存在です。その企業文化は現在のサービスにも色濃く反映されており、例えば「1日の約定代金50万円まで手数料無料」という業界に先駆けた料金体系や、若年層向けの「25歳以下手数料無料」といった大胆な施策は、常に投資家の側に立ち、業界の慣習に挑戦し続けてきた松井証券らしさの表れと言えるでしょう。</p>
+<br>
+<p>顧客中心主義を徹底し、「お客様の豊かな人生をサポートする」という企業理念のもと、個人投資家が本当に必要とするサービスは何かを追求し続けているのが、松井証券という会社なのです。（参照：松井証券公式サイト 沿革）</p>
+<br>
+<h4>**松井証券の基本情報まとめ**</h4>
+<br>
+<p>松井証券の基本的な会社情報とサービス概要を以下の表にまとめました。口座開設を検討する際の基礎情報としてご活用ください。</p>
+<br>
+<table class="article-table">
+<tr><td>項目</td><td>内容</td></tr>
+<tr><td>**商号**</td><td>松井証券株式会社（Matsui Securities Co., Ltd.）</td></tr>
+<tr><td>**設立**</td><td>1931年3月</td></tr>
+<tr><td>**資本金**</td><td><span class="diff-old">121億3,348万円（2023年9月末時点）</span><span class="diff-new">121億3,348万円（2024年3月31日現在）</span></td></tr>
+<tr><td>**代表者**</td><td>代表取締役社長 和里田 聰</td></tr>
+<tr><td>**本社所在地**</td><td>東京都千代田区麹町一丁目4番地</td></tr>
+<tr><td>**主な取扱商品**</td><td>国内株式（現物・信用）、投資信託、NISA、iDeCo、FX、先物・オプション</td></tr>
+<tr><td>**手数料体系（現物取引）**</td><td>**ボックスレート**：1日の約定代金合計に応じて手数料が決定<br>・50万円まで：0円<br>・100万円まで：1,100円<br>・200万円まで：2,200円</td></tr>
+<tr><td>**米国株式**</td><td>取り扱い<span class="diff-old">なし</span><span class="diff-new">〇 あり</span></td></tr>
+<tr><td>**単元未満株**</td><td>1株から購入可能（単元未満株）</td></tr>
+<tr><td>**IPO取扱実績（2023年）**</td><td>68社</td></tr>
+<tr><td>**顧客サポート**</td><td>電話、Webフォーム、AIチャット</td></tr>
+</table>
+<br>
+<p>※上記の情報は2024年5月時点のものです。最新の情報は公式サイトにてご確認ください。</p>
+<p>（参照：松井証券公式サイト 会社情報、手数料）</p>
+<br>
+<p><span class="diff-old">この基本情報からも、松井証券が**国内株式の少額取引に強み**を持ち、一方で**米国株の取り扱いがない**という特徴が明確に見て取れます。</span><span class="diff-new">この基本情報からも、松井証券が**国内株式の少額取引に強み**を持ち、一方で**米国株の取扱銘柄は主要ネット証券に比べて限定的である**という特徴が見て取れます。</span>次の章からは、これらの特徴が実際の利用者の間でどのように評価されているのか、具体的な良い評判・口コミを詳しく見ていきましょう。</p>
+<br>
+<h3>**松井証券の良い評判・口コミ**</h3>
+<br>
+<p>松井証券は、特に手数料体系や独自のサービスにおいて、他の証券会社にはない多くの魅力を持っています。ここでは、利用者から寄せられる良い評判・口コミを6つのポイントに絞って、その背景やメリットを詳しく解説します。</p>
+<br>
+<h4>**1日の取引金額50万円まで手数料が無料**</h4>
+<br>
+<p>松井証券の最も代表的な特徴であり、多くの投資家から支持されているのが、**1日の約定代金合計が50万円までであれば、現物取引・信用取引ともに手数料が一切かからない**という料金体系「ボックスレート」です。</p>
+<br>
+<p>これは、1回の取引ごとではなく、**1日の取引の合計金額で手数料が決まる**というユニークな仕組みです。例えば、1日にA社の株を10万円、B社の株を20万円、C社の株を15万円購入した場合、合計の約定代金は45万円となり、50万円以下なので手数料は0円です。これは、1日に何度も取引を行うデイトレーダーや、少額で複数の銘柄を売買したい投資初心者にとって、非常に大きなメリットとなります。</p>
+<br>
+<p>多くのネット証券では、1回の取引ごとに手数料がかかるプランと、1日の合計金額で手数料が決まる定額プランを用意していますが、50万円まで完全に無料というのは松井証券の大きな強みです。</p>
+<br>
+<p>**【具体例】1日に40万円の取引をした場合の手数料比較**</p>
+<br>
+<table class="article-table">
+<tr><td>証券会社</td><td>手数料プラン</td><td>手数料（税込）</td></tr>
+<tr><td>**松井証券**</td><td>**ボックスレート**</td><td>**0円**</td></tr>
+<tr><td>A証券</td><td>1回ごとのプラン</td><td>198円</td></tr>
+<tr><td>B証券</td><td>1日定額プラン</td><td>0円（※100万円まで無料の場合）</td></tr>
+</table>
+<br>
+<p>このように、特に50万円以下の取引においては、松井証券の手数料優位性は際立っています。投資を始めたばかりで、まずは少額から試してみたいという方や、細かく利益を確定させていくスタイルの投資家にとって、取引コストを極限まで抑えられるこの制度は、まさに理想的と言えるでしょう。（参照：松井証券公式サイト 手数料）</p>
+<br>
+<h4>**25歳以下は手数料が完全無料**</h4>
+<br>
+<p>松井証券は、若年層の資産形成を支援するため、**満25歳以下の利用者を対象に、国内株式の現物取引手数料を約定代金にかかわらず完全に無料**としています。</p>
+<br>
+<p>これは、前述の「1日50万円まで無料」という条件すら撤廃する、非常に画期的なサービスです。例えば、24歳の投資家が1日に100万円の取引を行っても、手数料は一切かかりません。社会人になったばかりでまだ投資資金が少ない若者や、学生のうちから投資を始めたいと考えている人にとって、これ以上ないほどの優遇措置です。</p>
+<br>
+<p>この制度の背景には、若いうちから投資に親しみ、長期的な視点で資産形成を行ってほしいという松井証券の強いメッセージが込められています。通常、手数料は証券会社の重要な収益源ですが、それを未来の投資家への投資として無料にするという大胆な経営判断は、多くの若者から高く評価されています。</p>
+<br>
+<p>**25歳以下であれば、取引金額を気にすることなく、様々な銘柄に挑戦できる**ため、投資経験を積む上で非常に有利な環境が提供されています。これから投資を始めようと考えている25歳以下の方であれば、松井証券は最有力候補の一つとなるでしょう。（参照：松井証券公式サイト 25歳以下のお客さまへ）</p>
+<br>
+<h4>**IPO（新規公開株）の抽選が完全平等**</h4>
+<br>
+<p>IPO（Initial Public Offering：新規公開株）投資は、上場前に公募価格で株を購入し、上場後の初値で売却することで大きな利益が期待できるため、個人投資家から絶大な人気を誇ります。しかし、人気が高いがゆえに抽選倍率も高く、なかなか当選しないのが実情です。</p>
+<br>
+<p>多くの証券会社では、預かり資産の多い顧客や取引頻度の高い顧客を優遇する「ステージ制」や「裁量配分」を導入しており、資金力のある投資家ほど当選しやすくなる傾向があります。</p>
+<br>
+<p>しかし、松井証券のIPO抽選は、**申込者一人ひとりに平等に当選の機会が与えられる「完全平等抽選」**を採用しています。これは、口座に預けている資産の額や、これまでの取引実績に一切関係なく、1人1票として公平に抽選が行われる仕組みです。</p>
+<br>
+<p>このため、**投資を始めたばかりの初心者や、投資資金が少ない個人投資家でも、大口の顧客と全く同じ条件でIPOに挑戦できます**。実際に、SNSなどでは「松井証券で初めてIPOに当選した」という喜びの声が数多く見られます。</p>
+<br>
+<p>IPO投資で一攫千金のチャンスを掴みたいと考えているなら、誰にでも公平なチャンスがある松井証券の口座は、開設しておいて損はないでしょう。</p>
+<br>
+<h4>**投資信託の信託報酬が現金で還元される**</h4>
+<br>
+<p>投資信託は、長期的な資産形成の有力な手段ですが、保有している間は「信託報酬」というコストが毎日かかり続けます。この信託報酬は年率0.1%〜2.0%程度と、一見すると小さな数字ですが、長期間にわたって運用すると、その総額は決して無視できない金額になります。</p>
+<br>
+<p>松井証券では、この信託報酬の一部を顧客に還元する**「<span class="diff-old">投信毎月現金還元サービス</span><span class="diff-new">最大1%貯まる投信残高ポイントサービス</span>」**を提供しています。これは、松井証券が受け取る信託報酬の中から、**同社が定める還元率に基づいて計算された金額を、毎月顧客の口座に現金（または松井証券ポイント）でキャッシュバックする**という画期的なサービスです。</p>
+<br>
+<p>例えば、信託報酬が年率0.5%の投資信託を100万円分保有していて、松井証券の還元率が0.3%だった場合、年間で約3,000円（100万円 × 0.3%）が還元される計算になります。</p>
+<br>
+<p>このサービスの最大のメリットは、**実質的な運用コストを低減できる**点にあります。同じ投資信託を保有するのであれば、還元サービスがある松井証券で購入・保有する方が、他の証券会社よりも最終的なリターンが高くなる可能性があります。特に、つみたてNISAやiDeCoなどで長期的にコツコツと投資信託を積み立てていく場合、この還元サービスの効果は年々大きくなっていきます。</p>
+<br>
+<p>低コストで効率的に資産形成を進めたいと考える投資家にとって、この現金還元サービスは非常に大きな魅力と言えるでしょう。<span class="diff-old">（参照：松井証券公式サイト 投信毎月現金還元サービス）</span><span class="diff-new">（参照：松井証券公式サイト 最大1%貯まる投信残高ポイントサービス）</span></p>
+<br>
+<h4>**サポート体制が手厚い**</h4>
+<br>
+<p>ネット証券は手数料が安い反面、サポートは電話やメールのみで、対面のような手厚いサポートは期待できないというイメージがあるかもしれません。しかし、松井証券は老舗証券会社としてのノウハウを活かし、非常に手厚い顧客サポートを提供していることで定評があります。</p>
+<br>
+<p>特に評価が高いのが**「株の取引相談窓口」**です。これは、単なる操作方法の案内だけでなく、**銘柄選びや売買のタイミングといった、より踏み込んだ投資に関する相談にも専門のスタッフが対応してくれる**サービスです。投資初心者にとっては、「何から始めたらいいかわからない」「この銘柄の将来性はどうだろうか」といった悩みを専門家に相談できる場があるのは、非常に心強いでしょう。</p>
+<br>
+<p>また、松井証券のサポート品質は、客観的な評価機関からも高く評価されています。ヘルプデスク協会の日本法人であるHDI-Japanが主催する「HDI格付けベンチマーク」の「問合せ窓口（電話）」および「Webサポート」部門において、**<span class="diff-old">13年連続で最高評価の三つ星を獲得</span><span class="diff-new">15年連続で最高評価の三つ星を獲得</span>**しています（2023年時点）。これは、応対の丁寧さ、的確さ、問題解決能力など、多岐にわたる項目で高い水準を維持していることの証明です。</p>
+<br>
+<p>投資に関する不安や疑問を気軽に相談できる環境が整っている点は、特に初心者にとって大きな安心材料となります。</p>
+<br>
+<h4>**松井証券ポイントが貯まる・使える**</h4>
+<br>
+<p>松井証券では、独自の「松井証券ポイント」を貯めて、様々な用途に活用できます。このポイントプログラムは、投資活動をよりお得で楽しいものにしてくれます。</p>
+<br>
+<p>ポイントの主な貯め方は以下の通りです。</p>
+<br>
+<ul>
+<li>  **投資信託の月間平均保有金額に応じて貯まる**：対象の投資信託を保有しているだけで、金額に応じて毎月ポイントが付与されます。</li>
+<li>  **<span class="diff-old">「MATSUI SECURITIES CARD」の利用</span><span class="diff-new">JCBカードでのクレカ積立</span>**：松井証券が発行するクレジットカードの利用金額に応じて、高い還元率でポイントが貯まります。</li>
+<li>  **各種キャンペーンへの参加**</li>
+</ul>
+<br>
+<p>貯まったポイントは、**1ポイント＝1円**として、以下のような使い道があります。</p>
+<br>
+<ul>
+<li>  **dポイントやAmazonギフトカードへの交換**：日常の買い物やサービスに利用できます。</li>
+<li>  **投資信託の積立**：ポイントを使って投資信託を買い付けることができ、再投資による複利効果が期待できます。</li>
+<li>  **<span class="diff-old">PayPayポイントへの交換</span><span class="diff-new">（PayPayポイントへの交換は公式サイトで確認できないため削除を推奨）</span>**：キャッシュレス決済に利用できます。</li>
+</ul>
+<br>
+<p>このように、投資をしながらポイ活もできるのが松井証券の魅力の一つです。特に、クレジットカードの利用や投信保有といった日常的な活動で貯まったポイントを、さらに投資に回せる「ポイント投資」は、現金を使わずに資産を増やせる可能性があるため、初心者にもおすすめです。</p>
+<br>
+<h3>**松井証券の悪い評判・口コミ｜「やばい」と言われる理由**</h3>
+<br>
+<p>多くのメリットがある一方で、松井証券にはいくつかのデメリットや注意点も存在します。これらが一部のユーザーから「やばい」「使いにくい」といったネガティブな評判に繋がっていると考えられます。ここでは、松井証券の悪い評判・口コミについて、その理由と背景を深掘りしていきます。</p>
+<br>
+<h4>**1日の取引金額50万円を超えると手数料が割高**</h4>
+<br>
+<p>松井証券の最大のメリットである「1日の約定代金50万円まで手数料無料」は、その条件を超えた途端にデメリットに転じます。松井証券のボックスレートでは、**1日の約定代金合計が50万円を超えると、100万円までで1,100円（税込）、200万円までで2,200円（税込）の手数料が発生します**。</p>
+<br>
+<p>これは、他の主要ネット証券と比較して割高になるケースがあります。</p>
+<br>
+<p>**【具体例】1日に100万円の取引をした場合の手数料比較**</p>
+<br>
+<table class="article-table">
+<tr><td>証券会社</td><td>手数料プラン</td><td>手数料（税込）</td></tr>
+<tr><td>**松井証券**</td><td>**ボックスレート**</td><td>**1,100円**</td></tr>
+<tr><td>SBI証券</td><td>スタンダードプラン（1回ごと）</td><td>535円</td></tr>
+<tr><td>SBI証券</td><td>アクティブプラン（1日定額）</td><td>0円</td></tr>
+<tr><td>楽天証券</td><td>いちにち定額コース</td><td>0円</td></tr>
+</table>
+<br>
+<p>※SBI証券、楽天証券は2023年10月より国内株式取引手数料無料化（ゼロ革命）を開始しており、条件を満たすことで手数料が無料になります。（参照：SBI証券公式サイト、楽天証券公式サイト）</p>
+<br>
+<p>上の表を見るとわかるように、1日の取引金額が100万円の場合、松井証券の手数料は1,100円ですが、SBI証券や楽天証券では条件を満たせば無料となります。このように、**一日にまとまった金額の取引を行うアクティブなトレーダーや、資金力のある投資家にとっては、松井証券の手数料体系はかえって不利に働く**可能性があります。</p>
+<br>
+<p>自分の1日あたりの平均的な取引金額を把握し、それが50万円を恒常的に超えるようであれば、他の証券会社を検討した方がトータルコストを抑えられるかもしれません。この手数料体系の特性が、一部のトレーダーから「割高だ」という評判に繋がっています。</p>
+<br>
+<h4>**米国株の取り扱いがない**</h4>
+<br>
+<p>現在のグローバルな株式市場において、米国株は非常に重要な投資対象です。Apple、Microsoft、NVIDIA、Teslaといった世界を牽引するハイテク企業や、S&P500、NASDAQといった主要指数に連動するETF（上場投資信託）に投資したいと考える日本の投資家は年々増加しています。</p>
+<br>
+<p>しかし、**2024年5月現在、松井証券では米国個別株や海外ETFの取り扱いがありません**。これは、グローバルな分散投資を目指す投資家にとって、非常に大きなデメリットです。松井証券の口座だけでは、成長著しい米国の巨大企業に直接投資することができません。</p>
+<br>
+<p>米国株に投資したい場合は、SBI証券、楽天証券、マネックス証券など、米国株の取り扱いに力を入れている他の証券会社で別途口座を開設する必要があります。</p>
+<br>
+<p>もちろん、松井証券で取り扱っている投資信託の中には、米国株を主要な投資対象とするファンド（例：eMAXIS Slim 米国株式(S&P500)など）も多数存在するため、間接的に米国市場に投資することは可能です。しかし、特定の個別銘柄を選んで投資したい、あるいはリアルタイムで米国株の売買を行いたいというニーズには応えられないのが現状です。</p>
+<br>
+<p>この点が、特に中級者以上の投資家から「商品ラインナップが物足りない」「時代遅れだ」といった厳しい評価を受ける原因となっています。</p>
+<br>
+<h4>**アプリやツールが使いにくい**</h4>
+<br>
+<p>松井証券は、高機能なトレーディングツールとして「ネットストック・ハイスピード」や、スマートフォンアプリ「株touch」を提供しています。これらのツールは、多彩なテクニカル指標や詳細な板情報など、プロのトレーダーも満足させるほどの豊富な機能を備えています。</p>
+<br>
+<p>しかしその一方で、一部のユーザーからは**「UI（ユーザーインターフェース）が古風で直感的ではない」「操作が複雑で分かりにくい」「動作が重く感じることがある」**といった声が挙がっています。特に、近年登場した他のネット証券のアプリは、シンプルで洗練されたデザインと直感的な操作性を重視しているものが多いため、それらと比較すると松井証券のツールは見劣りするという印象を持つユーザーもいるようです。</p>
+<br>
+<p>もちろん、ツールの使いやすさは個人の感覚に大きく左右されます。多機能であるがゆえに最初は戸惑うかもしれませんが、**カスタマイズ性が高く、自分好みの取引環境を構築できるため、慣れれば非常に強力な武器になる**という意見も多くあります。デイトレーダーなど、ツールを使いこなして高度な分析を行いたいユーザーからは、むしろ高く評価されています。</p>
+<br>
+<p>とはいえ、投資初心者や、スマートフォンで手軽に取引を完結させたいライトユーザーにとっては、この「使いにくさ」が投資を始める上でのハードルに感じられる可能性があります。この点が、アプリのレビューなどで低評価が付く一因と考えられます。</p>
+<br>
+<h4>**サポートの電話が繋がりにくいことがある**</h4>
+<br>
+<p>「良い評判・口コミ」のセクションで、松井証券のサポート品質が<span class="diff-old">HDI格付けで13年連続最高評価</span><span class="diff-new">HDI格付けで15年連続最高評価</span>を得ていることを紹介しました。サポートの質自体は非常に高いのですが、その一方で**「電話がなかなか繋がらない」**という口コミも散見されます。</p>
+<br>
+<p>特に、**株式市場が大きく変動している時間帯や、午前9時の取引開始直後、午後3時の取引終了間際**などは、多くの投資家からの問い合わせが集中するため、電話が繋がりにくくなる傾向があるようです。また、確定申告の時期なども問い合わせが増えるため、同様の状況が発生しやすくなります。</p>
+<br>
+<p>これは松井証券に限った話ではなく、多くの証券会社で共通して見られる現象ではありますが、いざという時にすぐに相談できないのは利用者にとって大きなストレスです。</p>
+<br>
+<p>対策としては、以下のような方法が考えられます。</p>
+<br>
+<ul>
+<li>  **比較的空いている時間帯（平日の午後など）を狙って電話する。**</li>
+<li>  **急ぎでない用件の場合は、Webフォームからの問い合わせを利用する。**</li>
+<li>  **簡単な質問であれば、24時間対応のAIチャットサポートを活用する。**</li>
+<li>  **公式サイトの「よくあるご質問（FAQ）」をまず確認する。**</li>
+</ul>
+<br>
+<p>サポートの質は高いだけに、この「繋がりにくさ」がネガティブな評判として目立ってしまうのは残念な点と言えるでしょう。</p>
+<br>
+<h3>**口コミからわかる松井証券のメリット8選**</h3>
+<br>
+<p>これまでの評判・口コミを踏まえ、松井証券を利用する具体的なメリットを8つの項目に整理して、さらに詳しく解説します。これらのメリットがご自身の投資スタイルや目的に合致するかどうか、ぜひチェックしてみてください。</p>
+<br>
+<h4>**① 1日の約定代金50万円まで手数料が無料**</h4>
+<br>
+<p>これは松井証券の最大のメリットであり、他の多くのネット証券に対する強力なアドバンテージです。**1日の取引合計額が50万円以下であれば、何度取引しても手数料は0円**。この「ボックスレート」と呼ばれる料金体系は、特に以下のような投資家に大きな恩恵をもたらします。</p>
+<br>
+<ul>
+<li>  **投資初心者**：まずは少額から株式投資を試してみたいという方にとって、手数料を気にせず気軽に始められます。例えば、10万円の資金で5万円ずつ2つの銘柄を買う、といった取引もコストゼロで行えます。</li>
+<li>  **デイトレーダー**：1日に何度も売買を繰り返すデイトレードにおいて、取引コストは収益を大きく左右します。松井証券なら、50万円の範囲内であれば、細かく利益を確定していく戦略をコストを気にせず実行できます。</li>
+<li>  **分散投資家**：複数の銘柄に少額ずつ資金を振り分けてポートフォリオを組みたい場合にも最適です。1銘柄あたりの投資額が小さくても、合計50万円までなら手数料がかかりません。</li>
+</ul>
+<br>
+<p>この手数料体系は、**「少額取引」という特定の領域において、業界最高水準のコストパフォーマンスを実現**していると言えます。</p>
+<br>
+<h4>**② 25歳以下は現物・<span class="diff-old">信用取引の手数料が無料</span><span class="diff-new">一日信用取引の手数料・金利が無料</span>**</h4>
+<br>
+<p>若年層への投資機会の提供に力を入れている松井証券は、**満25歳以下の投資家に対して、約定代金にかかわらず国内株式の現物取引および信用取引の手数料を完全に無料**にしています。</p>
+<br>
+<p>これは、単なる割引ではなく「完全無料」である点が非常に重要です。たとえ1日に100万円、200万円といった大きな金額の取引を行っても、25歳以下であれば手数料は一切かかりません。</p>
+<br>
+<p>このメリットは、以下のような若者にとって計り知れない価値を持ちます。</p>
+<br>
+<ul>
+<li>  **学生投資家**：アルバイトで貯めた資金など、限られた元手で投資を始める学生にとって、手数料負担がないことは大きな助けになります。</li>
+<li>  **新社会人**：社会人になって初めて本格的な資産形成を考える層にとって、最初の証券会社として最適です。手数料を気にせず様々な投資に挑戦し、経験を積むことができます。</li>
+</ul>
+<br>
+<p>若い時期から手数料コストをゼロにして投資経験を積めることは、将来の資産形成において非常に大きなアドバンテージとなります。</p>
+<br>
+<h4>**③ NISA口座での売買手数料が無料**</h4>
+<br>
+<p>NISA（少額投資非課税制度）は、個人の資産形成を支援するための税制優遇制度です。NISA口座内での株式や投資信託の売買で得た利益（配当金、分配金、譲渡益）が非課税になるという大きなメリットがあります。</p>
+<br>
+<p>松井証券では、このNISAのメリットを最大限に活かせるよう、**NISA口座における日本株、米国株（※）、投資信託の売買手数料をすべて無料**としています。</p>
+<p>（※注：松井証券では米国個別株の取り扱いはありませんが、米国株に投資する投資信託は購入可能で、その買付手数料が無料です。）</p>
+<br>
+<p>NISA口座では、非課税というメリットを活かすために、長期的な視点での運用が基本となります。売買のたびに手数料がかかってしまうと、その分リターンが目減りしてしまいますが、松井証券ならその心配がありません。</p>
+<br>
+<p>**つみたて投資枠での投信積立はもちろん、成長投資枠での日本株の売買も手数料無料**で行えるため、非課税メリットを余すことなく享受できます。これからNISAを始めようと考えている方にとって、松井証券は非常に有力な選択肢となるでしょう。</p>
+<br>
+<h4>**④ 信用取引の手数料が無料**</h4>
+<br>
+<p>松井証券は、現物取引だけでなく信用取引においても非常にユニークで強力な手数料体系を持っています。特に**「一日信用取引」というデイトレード専用の信用取引サービスでは、取引手数料が約定代金にかかわらず完全に無料**です。</p>
+<br>
+<p>さらに、通常は発生する金利や貸株料も、**日計り取引（その日のうちに決済する取引）に限り、買方金利・貸株料ともに0%**という優遇措置が設けられています。これにより、デイトレーダーは主要なコストをほぼゼロにして取引に臨むことができます。</p>
+<br>
+<p>また、通常の制度信用取引や無期限信用取引においても、前述のボックスレートが適用され、1日の約定代金合計が50万円までなら手数料は無料です。</p>
+<br>
+<p>このように、松井証券は信用取引、特にデイトレードを行うトレーダーにとって、コスト面で圧倒的な優位性を提供しています。</p>
+<br>
+<h4>**⑤ IPOの抽選が完全平等で誰にでもチャンスがある**</h4>
+<br>
+<p>前述の通り、松井証券のIPO抽選は**「完全平等抽選」**です。これは、投資資金の大小や取引実績に関わらず、すべての申込者に公平に当選のチャンスが与えられることを意味します。</p>
+<br>
+<p>多くの証券会社が採用する優遇抽選では、数千万円、数億円といった資産を持つ富裕層や、頻繁に取引を行うヘビーユーザーが有利になりがちで、初心者が当選するのは至難の業です。</p>
+<br>
+<p>しかし、松井証券なら**口座を開設したばかりの初心者でも、長年の大口顧客と全く同じ確率で抽選に参加できます**。IPO投資は、当たれば大きな利益が期待できる宝くじのような魅力があります。その「宝くじを引く権利」が誰にでも平等に与えられている点は、松井証券の大きなメリットです。複数の証券会社からIPOに申し込むのが当選確率を上げる定石ですが、その中の一つとして松井証券の口座は必須と言えるでしょう。</p>
+<br>
+<h4>**⑥ 投資信託の信託報酬が現金やポイントで還元される**</h4>
+<br>
+<p>長期的な資産形成のコアとなる投資信託。その運用成績を左右する隠れたコストが「信託報酬」です。松井証券の**<span class="diff-old">「投信毎月現金還元サービス」</span><span class="diff-new">「最大1%貯まる投信残高ポイントサービス」</span>**は、この信託報酬の一部を投資家に還元することで、実質的なコスト負担を軽減してくれます。</p>
+<br>
+<p>このサービスは、松井証券が顧客から預かった投資信託の信託報酬の中から、一部を現金または松井証券ポイントでキャッシュバックするものです。**低コストで人気のインデックスファンドなども含め、ほとんどの取扱投資信託が還元の対象**となっています。</p>
+<br>
+<p>長期で積み立て投資を行う場合、この還元はじわじわと効果を発揮します。数年、数十年というスパンで見れば、還元された現金の総額は数万円、数十万円になる可能性もあり、複利効果をさらに高めることに繋がります。**同じ投資信託を買うなら、還元のある松井証券で買う方がお得**、という非常に分かりやすいメリットです。</p>
+<br>
+<h4>**⑦ 顧客サポートが充実している**</h4>
+<br>
+<p>松井証券は、ネット証券でありながら、老舗ならではの質の高いサポート体制を誇ります。<span class="diff-old">HDI-Japanによる格付けで13年連続最高評価を獲得している事実</span><span class="diff-new">HDI-Japanによる格付けで15年連続最高評価を獲得している事実</span>は、その客観的な証拠です。</p>
+<br>
+<p>特に初心者にとって心強いのが、**「株の取引相談窓口」**の存在です。ここでは、ツールの操作方法といった事務的な質問だけでなく、「どのような基準で銘柄を選べばいいか」「今の相場状況で買うべきか、売るべきか」といった、より実践的な投資相談にも専門スタッフが対応してくれます。</p>
+<br>
+<p>投資を始めたばかりの頃は、些細なことでも不安に感じたり、判断に迷ったりするものです。そんな時に、気軽に専門家の意見を聞ける窓口があることは、大きな安心感に繋がります。**手数料の安さだけでなく、困った時に頼れるサポートがある**という点も、松井証券が初心者におすすめされる理由の一つです。</p>
+<br>
+<h4>**⑧ 豊富な情報ツールを無料で利用できる**</h4>
+<br>
+<p>松井証券に口座を開設すると、投資判断に役立つ様々な情報ツールを無料で利用できます。</p>
+<br>
+<ul>
+<li>  **QUICKリサーチネット**：金融情報サービスのQUICK社が提供する、個別企業の詳細なレポートや業界分析、アナリストによる評価などを閲覧できます。通常は有料で提供されるような質の高い情報を、口座があれば誰でも無料で利用可能です。</li>
+<li>  **テーマ投資ガイド**：AI（人工知能）、再生可能エネルギー、インバウンドなど、今話題の投資テーマに関連する銘柄をリストアップしてくれます。何に投資すれば良いか分からない初心者でも、テーマから銘柄を探すきっかけになります。</li>
+<li>  **ネットストック・ハイスピード**：プロ向けのトレーディングツール。多彩なテクニカルチャートや、リアルタイムの株価ランキング、ニュース速報など、投資に必要な情報が満載です。</li>
+</ul>
+<br>
+<p>これらのツールを活用することで、初心者から上級者まで、自身の投資戦略に基づいた情報収集と分析を効率的に行うことができます。</p>
+<br>
+<h3>**口コミからわかる松井証券のデメリット4選**</h3>
+<br>
+<p>多くのメリットがある一方で、松井証券には注意すべきデメリットも存在します。自分の投資スタイルによっては、これらのデメリットが致命的になる可能性もあります。ここでは、代表的な4つのデメリットについて、その内容と影響を詳しく解説します。</p>
+<br>
+<h4>**① 1日の約定代金50万円を超えると手数料が割高になる**</h4>
+<br>
+<p>これはメリット①の裏返しであり、松井証券の料金体系を理解する上で最も重要なポイントです。50万円までは無料という恩恵は大きいですが、**その閾値を1円でも超えると、途端に1,100円（税込）の手数料が発生します**。</p>
+<br>
+<p>例えば、1日に50万1,000円の取引をした場合、手数料は1,100円です。これは、他の主要ネット証券が提供する手数料無料プランと比較すると、非常に割高です。</p>
+<br>
+<p>このため、以下のような投資家には松井証券は不向きと言えます。</p>
+<br>
+<ul>
+<li>  **資金力のある投資家**：一度に100万円単位で株式を売買するのが常である場合、毎回1,100円以上の手数料がかかることになります。</li>
+<li>  **スイングトレーダー**：数日から数週間のスパンで大きな値幅を狙うスイングトレードでは、一度の取引金額が50万円を超えることが多くなります。</li>
+<li>  **相場の急変時に大きく動く投資家**：普段は少額取引でも、市場の大きな変動に合わせてまとまった資金を投入するスタイルの場合、いざという時に高い手数料が足かせになる可能性があります。</li>
+</ul>
+<br>
+<p>**自分の取引スタイルが、1日の約定代金50万円以内に収まるかどうか**が、松井証券を選ぶ上での大きな分かれ道となります。</p>
+<br>
+<p><div class="diff-block rewrite-block"></p>
+<p><div class="diff-label">📝 セクション書き換え</div></p>
+<p><div class="diff-old">### **② 米国株や海外ETFの取り扱いがない**<br></p>
+<p><br></p>
+<p>現代の株式投資において、ポートフォリオのグローバルな分散はリスク管理の基本とされています。その中心となるのが、世界経済を牽引する米国株です。<br></p>
+<p><br></p>
+<p>しかし、**松井証券では、AppleやNVIDIAといった米国の個別株式や、VOO（S&amp;P 500 ETF）のような海外ETFを直接売買することができません**。これは、松井証券のサービスにおける最大の弱点と言っても過言ではありません。<br></p>
+<p><br></p>
+<p>米国株に投資するためには、SBI証券や楽天証券、マネックス証券といった、外国株取引に強い証券会社の口座を別途開設する必要があります。<br></p>
+<p><br></p>
+<p>「全世界株式」や「S&amp;P500」に連動する投資信託は松井証券でも購入できますが、これはあくまで間接的な投資です。特定の米国企業に集中投資したい、あるいはドル建てで資産を持ちたいといったニーズには応えられません。<br></p>
+<p><br></p>
+<p>**投資対象を日本株に限定している、あるいは投資信託での分散投資で十分と考えている方以外**にとっては、この点は非常に大きなデメリットとなります。</div></p>
+<p><div class="diff-arrow">↓</div></p>
+<p><div class="diff-new">### **② 米国株の取扱銘柄数が限定的**<br></p>
+<p><br></p>
+<p>現代の株式投資において、ポートフォリオのグローバルな分散はリスク管理の基本とされており、その中心となるのが米国株です。<br></p>
+<p><br></p>
+<p>松井証券では米国株（現物・信用）や米国ETFの取引が可能ですが、**SBI証券や楽天証券といった主要ネット証券と比較すると、取扱銘柄数が少ない**のが現状です。AppleやNVIDIAといった有名企業や主要なETFはカバーされていますが、より幅広い銘柄から投資先を選びたい投資家にとっては、物足りなさを感じる可能性があります。<br></p>
+<p><br></p>
+<p>そのため、特定のニッチな銘柄に投資したい場合や、最新のIPO銘柄にいち早く投資したい場合は、米国株の取り扱いに強い他の証券会社との併用を検討する必要があります。<br></p>
+<p><br></p>
+<p>ただし、「全世界株式」や「S&amp;P500」に連動する投資信託は松井証券でも購入できるため、多くの投資家にとっては十分な選択肢が揃っていると言えるでしょう。</div></p>
+<p></div></p>
+<br>
+<h4>**③ 単元未満株の取り扱いがない**</h4>
+<br>
+<p>**【注意】この項目は過去のデメリットであり、現在は改善されています。**</p>
+<br>
+<p>かつて松井証券は単元未満株（1株から売買できるサービス）を取り扱っておらず、これが大きなデメリットとして指摘されていました。しかし、**2023年より単元未満株の取り扱いを開始し、この弱点は解消されつつあります**。</p>
+<br>
+<p>ただし、他の証券会社と比較していくつかの注意点があります。</p>
+<br>
+<ul>
+<li>  **取引方法**：<span class="diff-old">松井証券の単元未満株は、リアルタイムでの取引（ザラ場取引）はできず、注文した翌営業日の始値での約定となります。</span><span class="diff-new">松井証券の単元未満株はリアルタイムでの取引（ザラ場取引）はできず、注文時間に応じて当日の前場終値または後場終値を基準とした価格で約定します。</span>SBI証券や楽天証券ではリアルタイム取引が可能なため、この点は見劣りします。</li>
+<li>  **手数料**：買付手数料は無料ですが、**<span class="diff-old">売却時には約定代金の0.55%（税込、最低手数料55円）の手数料がかかります</span><span class="diff-new">売却時には約定代金の0.55%（税込）の手数料がかかります（最低手数料なし）。</span>**。SBI証券や楽天証券では売買ともに手数料が無料化されているため、コスト面で不利になります。</li>
+</ul>
+<br>
+<p>結論として、**「単元未満株の取り扱いがない」というデメリットは過去のものになりましたが、他社と比較すると取引の自由度やコスト面でまだ改善の余地がある**、というのが現状です。数千円から有名企業の株を買いたいというニーズには応えられますが、より有利な条件で取引したい場合は他の証券会社を検討する価値があります。（参照：松井証券公式サイト 単元未満株）</p>
+<br>
+<h4>**④ アプリやツールが使いにくいという声がある**</h4>
+<br>
+<p>松井証券が提供する取引ツール「ネットストック・ハイスピード」やスマホアプリ「株touch」は、非常に多機能で、詳細な分析を行いたい上級者からは高く評価されています。</p>
+<br>
+<p>しかし、その多機能さゆえに画面の情報量が多く、操作が複雑に感じられることがあります。特に、**シンプルで直感的な操作性を求める投資初心者や、他社の洗練されたUIのアプリに慣れているユーザーからは、「デザインが古い」「どこに何があるか分かりにくい」といった不満の声**が挙がっています。</p>
+<br>
+<p>【ユーザーから指摘されがちな点】</p>
+<ul>
+<li>  **デザイン**：昔ながらのトレーディングツールといった印象で、モダンさに欠けるという意見。</li>
+<li>  **操作性**：メニューの階層が深かったり、ボタンの配置が直感的でなかったりする場面がある。</li>
+<li>  **初心者への配慮**：機能が多すぎるため、初心者はどの機能を使えば良いか迷ってしまう。</li>
+</ul>
+<br>
+<p>もちろん、これはあくまで一部のユーザーの声であり、カスタマイズを駆使して自分だけの最強の取引環境を構築できるというメリットもあります。しかし、**誰にとっても「簡単で使いやすい」ツールとは言えない**のが実情であり、口座開設前にデモ画面などで操作感を試してみることをおすすめします。</p>
+<br>
+<h3>**松井証券はどんな人におすすめ？**</h3>
+<br>
+<p>これまでのメリット・デメリットを踏まえると、松井証券は万人向けの証券会社ではなく、特定の投資スタイルを持つ人に最適な「尖った」証券会社であることがわかります。ここでは、松井証券を特におすすめしたい人のタイプを5つ紹介します。</p>
+<br>
+<h4>**1日の取引金額が50万円以下の人**</h4>
+<br>
+<p>松井証券の最大の強みである**「1日の約定代金合計50万円まで手数料無料」**の恩恵を最大限に受けられる人です。具体的には、以下のような投資スタイルの方が該当します。</p>
+<br>
+<ul>
+<li>  **少額からのスタートを考えている投資初心者**：まずは10万円、20万円といった資金で、複数の銘柄を試してみたい方に最適です。手数料を気にすることなく、様々な株に挑戦できます。</li>
+<li>  **コツコツ積立投資と並行して個別株も楽しみたい人**：メインの資産形成は投資信託で行い、サテライトとして月に数万円程度、気になる個別株を売買するようなスタイルにもぴったりです。</li>
+<li>  **50万円以下の範囲でデイトレードを行う人**：1日に何度も取引を繰り返しても、合計金額が50万円以内ならコストはゼロ。細かな利益を積み重ねる戦略において、手数料負担がないことは絶大なアドバンテージになります。</li>
+</ul>
+<br>
+<p>**自分の取引規模が常に50万円以下に収まるのであれば、松井証券は手数料面で最強の選択肢**と言えるでしょう。</p>
+<br>
+<h4>**25歳以下の人**</h4>
+<br>
+<p>**25歳以下の若者にとって、松井証券は他のどの証券会社よりも有利な条件を提供しています**。約定代金に関わらず、現物取引・信用取引の手数料が完全に無料になるためです。</p>
+<br>
+<ul>
+<li>  **学生**：学業の傍ら、将来のために投資を始めたい学生にとって、手数料という初期ハードルがないのは大きな魅力です。少額のアルバイト代からでも、コストを気にせず投資経験を積めます。</li>
+<li>  **新社会人**：社会人になり、本格的に資産形成を考え始める20代前半の方に最適です。給料の一部を投資に回す際、手数料で資産が目減りする心配がありません。若いうちから大きな金額で取引する経験を積むことも可能です。</li>
+</ul>
+<br>
+<p>この特典は26歳になると終了してしまいますが、それまでの期間に手数料無料で得られる投資経験は、その後の資産形成において非常に貴重な財産となります。**26歳になる前に、この特典を最大限に活用しない手はありません**。</p>
+<br>
+<h4>**IPO投資に挑戦したい人**</h4>
+<br>
+<p>「一攫千金の夢があるIPO投資を始めてみたいけれど、資金が少ないからどうせ当たらないだろう」と諦めている方にこそ、松井証券をおすすめします。</p>
+<br>
+<p>松井証券のIPO抽選は、**預かり資産や取引実績に一切左右されない「完全平等抽選」**です。これは、投資資金が10万円の初心者も、1億円の資産家も、全く同じ当選確率で抽選に参加できることを意味します。</p>
+<br>
+<p>他の証券会社では、資金力のある投資家が優遇されることが多く、初心者が当選するのは非常に困難です。しかし、松井証券なら誰にでも公平にチャンスがあります。</p>
+<br>
+<p>IPOの当選確率を上げるためには、複数の証券会社から申し込むのがセオリーですが、その中でも**初心者や少額投資家が当選を狙える数少ない証券会社として、松井証券の口座は必須**と言えます。</p>
+<br>
+<h4>**NISAで株式投資を始めたい人**</h4>
+<br>
+<p>2024年から新NISAが始まり、非課税投資枠が大幅に拡大したことで、NISA口座での株式投資への関心が高まっています。</p>
+<br>
+<p>松井証券は、**NISA口座内での日本株の売買手数料が無料**です。これにより、NISAの非課税メリットを最大限に活かすことができます。</p>
+<br>
+<ul>
+<li>  **成長投資枠で個別株に挑戦したい人**：年間240万円の成長投資枠を使って、気になる日本の高配当株や成長株を売買する際、手数料がかからないため、利益をまるごと非課税の恩恵に乗せることができます。</li>
+<li>  **つみたて投資枠と併用したい人**：つみたて投資枠でインデックスファンドを積み立てつつ、成長投資枠でアクティブに個別株を運用したいというニーズにも応えられます。</li>
+</ul>
+<br>
+<p>NISA口座を開設する証券会社を選ぶ上で、売買手数料が無料であることは非常に重要なポイントです。松井証券は、その条件をクリアしている有力な選択肢の一つです。</p>
+<br>
+<h4>**手厚いサポートを受けたい投資初心者**</h4>
+<br>
+<p>「ネット証券は便利そうだけど、困ったときに誰にも相談できないのが不安」と感じている投資初心者の方に、松井証券は非常におすすめです。</p>
+<br>
+<p>松井証券は、<span class="diff-old">HDI格付けで13年連続最高評価を獲得している</span><span class="diff-new">HDI格付けで15年連続最高評価を獲得している</span>質の高いサポート体制を誇ります。特に**「株の取引相談窓口」**では、ツールの使い方だけでなく、銘柄選びや売買タイミングといった投資そのものに関する相談にも乗ってもらえます。</p>
+<br>
+<ul>
+<li>  **何から手をつけていいか分からない**</li>
+<li>  **ニュースで見たあの株、買っても大丈夫？**</li>
+<li>  **自分のポートフォリオはこれでいいの？**</li>
+</ul>
+<br>
+<p>このような初心者が抱えがちな悩みを、専門のスタッフに気軽に相談できる環境は、他のネット証券にはない大きな強みです。**手数料の安さという経済的なメリットに加え、精神的な安心感も得られる**のが、初心者に松井証券をおすすめする大きな理由です。</p>
+<br>
+<h3>**松井証券と他の主要ネット証券を比較**</h3>
+<br>
+<p>松井証券の特徴をより深く理解するために、業界最大手のSBI証券と楽天証券とのサービス内容を比較してみましょう。それぞれの証券会社に強みと弱みがあるため、ご自身の投資スタイルに最も合った一社を見つけるための参考にしてください。</p>
+<br>
+<table class="article-table">
+<tr><td>項目</td><td>**松井証券**</td><td>**SBI証券**</td><td>**楽天証券**</td></tr>
+<tr><td>**国内株手数料（現物）**</td><td>**1日50万円まで無料**<br>（以降は従量制）</td><td>条件達成で**完全無料**</td><td>条件達成で**完全無料**</td></tr>
+<tr><td>**米国株取扱**</td><td>**なし**</td><td>**◎ 豊富**</td><td>**◎ 豊富**</td></tr>
+<tr><td>**単元未満株（1株投資）**</td><td>**〇**<br>（買付無料、売却有料）</td><td>**◎**<br>（売買無料）</td><td>**◎**<br>（売買無料）</td></tr>
+<tr><td>**IPO抽選方式**</td><td>**完全平等抽選**</td><td>**ポイント制あり**<br>（落選でポイント貯まる）</td><td>**完全平等抽選**<br>（資金量で当選確率UP）</td></tr>
+<tr><td>**ポイント制度**</td><td>松井証券ポイント<br>（dポイント等に交換可）</td><td>Vポイント、Pontaポイント等</td><td>楽天ポイント</td></tr>
+<tr><td>**サポート**</td><td>**◎ 非常に手厚い**<br>（株の取引相談窓口あり）</td><td>〇 標準的</td><td>〇 標準的</td></tr>
+<tr><td>**こんな人におすすめ**</td><td>**1日50万円以下のトレーダー、25歳以下、IPO初心者**</td><td>**総合力No.1。米国株や単元未満株をやりたい全ての人**</td><td>**楽天経済圏ユーザー、使いやすいアプリを求める人**</td></tr>
+</table>
+<br>
+<h4>**SBI証券との比較**</h4>
+<br>
+<p>SBI証券は、口座開設数、預かり資産残高ともに業界No.1を誇るネット証券の最大手です。</p>
+<br>
+<p>**SBI証券の強みは、その圧倒的な総合力**にあります。国内株式の手数料は条件を満たせば完全に無料。米国株の取扱銘柄数は業界トップクラスで、単元未満株（S株）もリアルタイムで売買手数料無料で取引できます。また、IPOの取扱幹事数も非常に多く、落選しても「IPOチャレンジポイント」が貯まり、貯め続ければいつかは必ず当選できるというユニークな仕組みも魅力です。</p>
+<br>
+<p>一方、松井証券がSBI証券に対して優位性を持つのは、**「1日の約定代金50万円まで」という条件における手数料の分かりやすさ**と、**「完全平等抽選」のIPO**、そして**手厚い電話サポート**です。SBI証券の手数料無料化にはいくつかの条件がありますが、松井証券は口座を開設すれば誰でも50万円まで無料の恩恵を受けられます。</p>
+<br>
+<p>**結論として、幅広い商品に低コストで投資したい、特に米国株や単元未満株に興味があるならSBI証券。取引を1日50万円以内に限定し、IPOの平等なチャンスや手厚いサポートを重視するなら松井証券**、という棲み分けができます。</p>
+<br>
+<h4>**楽天証券との比較**</h4>
+<br>
+<p>楽天証券は、楽天グループの強みを活かしたポイントプログラムと、初心者にも分かりやすい取引ツール「iSPEED」で高い人気を誇ります。</p>
+<br>
+<p>**楽天証券の最大の魅力は、楽天経済圏との強力な連携**です。楽天カードでの投信積立でポイントが貯まったり、貯まった楽天ポイントで株式や投資信託を購入できたりと、楽天ユーザーにとっては非常にお得なサービスが満載です。また、SBI証券と同様に、国内株式手数料の無料化や、豊富な米国株ラインナップ、手数料無料の単元未満株（かぶミニ）など、総合力も非常に高いです。</p>
+<br>
+<p>松井証券が楽天証券に対して優位な点は、やはり**IPOの抽選方式**と**サポート体制**です。楽天証券のIPO抽選も基本的には平等抽選ですが、申込時の資金量に応じて当選確率が変動する仕組みがあるため、完全な平等ではありません。また、専門スタッフに投資相談ができる「株の取引相談窓口」のような手厚いサポートは松井証券ならではのサービスです。</p>
+<br>
+<p>**結論として、楽天ポイントを普段から活用しており、スマホ中心で直感的に取引したいなら楽天証券。ポイ活よりも純粋な取引コストの安さ（50万円以下）や、IPOの公平性、専門家への相談環境を求めるなら松井証券**がおすすめです。</p>
+<br>
+<h3>**松井証券の口座開設手順3ステップ**</h3>
+<br>
+<p>松井証券の口座開設は、スマートフォンと本人確認書類があれば、オンラインで簡単に完結します。ここでは、申し込みから取引開始までの流れを3つのステップに分けて分かりやすく解説します。</p>
+<br>
+<h4>**① ステップ1：公式サイトから口座開設を申し込む**</h4>
+<br>
+<p>まずは、松井証券の公式サイトにアクセスし、「口座開設（無料）」のボタンから申し込み手続きを開始します。</p>
+<br>
+<p>画面の指示に従い、以下の情報を入力していきます。</p>
+<br>
+<ul>
+<li>  **氏名、住所、生年月日などの個人情報**</li>
+<li>  **連絡先（電話番号、メールアドレス）**</li>
+<li>  **職業、年収、投資経験などの情報**</li>
+<li>  **特定口座の選択**（通常は「源泉徴収あり」を選択すれば、確定申告の手間が省けて便利です）</li>
+<li>  **NISA口座の開設希望の有無**</li>
+</ul>
+<br>
+<p>入力内容は後で提出する本人確認書類と一致している必要があるため、間違いのないよう慎重に入力しましょう。すべての入力が終わると、次に本人確認書類の提出方法を選択する画面に進みます。</p>
+<br>
+<h4>**② ステップ2：本人確認書類を提出する**</h4>
+<br>
+<p>本人確認の方法は、主に「スマートフォンでe-KYC」と「郵送」の2種類があります。**おすすめは、スピーディーに手続きが完了する「スマートフォンでe-KYC」**です。</p>
+<br>
+<p>**【スマートフォンでe-KYCの場合】**</p>
+<br>
+<p>1.  **必要なもの**：</p>
+<ul>
+<li>  マイナンバーカード または 運転免許証＋通知カード</li>
+<li>  カメラ付きスマートフォン</li>
+</ul>
+<p>2.  **手順**：</p>
+<ul>
+<li>  画面の指示に従い、スマートフォンで本人確認書類の表面・裏面・厚みを撮影します。</li>
+<li>  次に、ご自身の顔写真を撮影します（インカメラを使用）。</li>
+<li>  撮影したデータがアップロードされれば、本人確認手続きは完了です。</li>
+</ul>
+<br>
+<p>この方法の場合、郵送物のやり取りが不要なため、**最短で申し込み当日に口座開設が完了**することもあります。</p>
+<br>
+<p>**【郵送の場合】**</p>
+<br>
+<p>1.  申し込み完了後、松井証券から口座開設に必要な書類が郵送されてきます。</p>
+<p>2.  届いた書類に署名・捺印し、本人確認書類のコピーを同封して返送します。</p>
+<p>3.  松井証券側で書類の確認が完了次第、手続きが進められます。</p>
+<br>
+<p>郵送の場合は、書類の往復に時間がかかるため、口座開設完了まで1週間〜2週間程度かかることが一般的です。</p>
+<br>
+<h4>**③ ステップ3：口座開設完了通知を受け取る**</h4>
+<br>
+<p>松井証券での審査が完了すると、「口座開設完了通知」が届きます。</p>
+<br>
+<ul>
+<li>  **e-KYCで申し込んだ場合**：メールで通知が届きます。メール内に記載されているログインIDと、申し込み時に設定したパスワードで、すぐに取引サイトにログインできます。</li>
+<li>  **郵送で申し込んだ場合**：転送不要の簡易書留郵便で通知が届きます。通知書にログインIDと仮パスワードが記載されています。</li>
+</ul>
+<br>
+<p>ログイン後、取引に必要な資金を入金すれば、すぐに株式や投資信託の売買を始めることができます。入金方法は、提携金融機関からのネットリンク入金（手数料無料）、銀行振込などがあります。</p>
+<br>
+<h3>**松井証券の評判に関するよくある質問**</h3>
+<br>
+<p>最後に、松井証券の評判に関して、多くの人が疑問に思う点をQ&A形式でまとめました。</p>
+<br>
+<h4>**松井証券は初心者でも安心して使えますか？**</h4>
+<br>
+<p>**はい、初心者の方でも安心して使える証券会社です。**</p>
+<br>
+<p>その理由は以下の通りです。</p>
+<br>
+<p>1.  **手厚いサポート体制**：投資に関する初歩的な疑問から専門的な相談まで対応してくれる「株の取引相談窓口」があり、初心者の不安を解消してくれます。</p>
+<p>2.  **手数料の安さ**：1日の取引金額が50万円までなら手数料が無料なので、少額からコストを気にせず投資を始められます。</p>
+<p>3.  **豊富な情報ツール**：口座があれば無料で利用できるレポートや分析ツールが充実しており、投資の勉強にも役立ちます。</p>
+<p>4.  **100年以上の歴史**：長年の実績に裏打ちされた信頼性と安定感があります。</p>
+<br>
+<p>ただし、ツールの操作性については好みが分かれるため、デモ口座などで事前に試してみることをおすすめします。</p>
+<br>
+<h4>**松井証券のセキュリティや安全性は大丈夫ですか？**</h4>
+<br>
+<p>**はい、松井証券は非常に高いレベルのセキュリティ対策を講じており、安全性に問題はありません。**</p>
+<br>
+<p>まず、松井証券は100年以上の歴史を持つ金融商品取引業者であり、金融庁の監督下で厳格な法令遵守体制を敷いています。</p>
+<br>
+<p>顧客の資産保護に関しても、以下の対策が徹底されています。</p>
+<br>
+<ul>
+<li>  **分別管理**：顧客から預かった資産（現金や株式）は、松井証券自身の資産とは明確に分けて管理することが法律で義務付けられています。万が一松井証券が破綻したとしても、顧客の資産は保護されます。</li>
+<li>  **投資者保護基金**：分別管理に加えて、日本投資者保護基金に加入しており、万が一の際には1顧客あたり1,000万円まで補償されます。</li>
+<li>  **サイバーセキュリティ対策**：ログイン時の2段階認証や、通信の暗号化（SSL）、不正アクセス検知システムなど、最新の技術で顧客の口座を不正な取引から守っています。</li>
+</ul>
+<br>
+<p>これらの厳重な管理体制により、顧客は安心して資産を預け、取引を行うことができます。</p>
+<br>
+<h4>**松井証券のポイント制度について教えてください**</h4>
+<br>
+<p>松井証券では、取引やサービスの利用に応じて**「松井証券ポイント」**が貯まるお得なプログラムがあります。</p>
+<br>
+<p>**【ポイントの貯め方】**</p>
+<br>
+<ul>
+<li>  **投資信託の保有**：対象の投資信託の月間平均保有金額に応じて、毎月ポイントが付与されます。</li>
+<li>  **MATSUI SECURITIES CARDの利用**：クレジットカードの利用金額に応じて、高い還元率（1%〜）でポイントが貯まります。</li>
+<li>  **各種キャンペーン**：口座開設キャンペーンや取引キャンペーンなどに参加することでポイントがもらえます。</li>
+</ul>
+<br>
+<p>**【ポイントの使い方（1ポイント=1円）】**</p>
+<br>
+<ul>
+<li>  **商品と交換**：dポイントやPayPayポイント、Amazonギフトカードなど、提携先のポイントや商品券に交換できます。</li>
+<li>  **ポイント投資**：貯まったポイントを使って、投資信託の積立購入ができます。現金を使わずに資産を増やせる可能性があります。</li>
+</ul>
+<br>
+<p>投資をしながらポイ活もできる、非常に魅力的な制度です。特に、投信を長期保有するだけで自動的にポイントが貯まっていくのは、長期投資家にとって嬉しいメリットと言えるでしょう。</p>
+<br>
+<h3>**まとめ**</h3>
+<br>
+<p>本記事では、松井証券の評判について、良い口コミ・悪い口コミの両面から徹底的に分析し、そのメリット・デメリットを詳しく解説しました。</p>
+<br>
+<p>最後に、記事の要点をまとめます。</p>
+<br>
+<p>**松井証券の最大のメリット**</p>
+<ul>
+<li>  **1日の約定代金合計50万円まで、取引手数料が完全に無料。**</li>
+<li>  **25歳以下は、約定代金にかかわらず手数料が完全に無料。**</li>
+<li>  **IPO（新規公開株）の抽選が、資金力に関係なく誰にでも平等な「完全平等抽選」。**</li>
+<li>  **投資信託の信託報酬の一部が、現金やポイントで還元される。**</li>
+<li>  **専門スタッフに投資相談ができるなど、手厚いサポート体制が充実している。**</li>
+</ul>
+<br>
+<p>**松井証券の主なデメリット**</p>
+<ul>
+<li>  **1日の約定代金が50万円を超えると、手数料が他のネット証券より割高になる。**</li>
+<li>  **<span class="diff-old">米国個別株や海外ETFの取り扱いがない。</span><span class="diff-new">米国株の取扱銘柄数が主要ネット証券に比べて少ない。</span>**</li>
+<li>  **取引アプリやツールが、多機能な反面、操作が複雑で使いにくいと感じるユーザーもいる。**</li>
+</ul>
+<br>
+<p>これらの特徴から、松井証券は**「1日の取引を50万円以内に抑えられる少額投資家やデイトレーダー」「手数料無料で経験を積みたい25歳以下の若者」「資金力に関係なくIPOに挑戦したい人」「手厚いサポートを求める投資初心者」**にとって、非常に魅力的な証券会社であると言えます。</p>
+<br>
+<p>一方で、**「一度に大きな金額で取引したい」「米国株を中心にグローバルに投資したい」**という方には、他の証券会社の方が適している可能性が高いでしょう。</p>
+<br>
+<p>松井証券が「やばい」と言われるのは、そのサービスが良くも悪くも「尖っている」からです。この記事を参考に、ご自身の投資スタイルと松井証券のサービスが合致するかどうかをじっくりと見極め、最適な証券会社選びに役立ててください。</p>
+    </div>
+    
+    <h2 id="urls">🔗 取得URL一覧（254件）</h2>
+    <p>ファクトチェックに使用した公式サイトのページ一覧です。</p>
+    <div class="url-list"><div class="url-item">1. <a href="https://www.matsui.co.jp/first/" target="_blank">https://www.matsui.co.jp/first/</a></div>
+<div class="url-item">2. <a href="https://www.matsui.co.jp/first/flow/" target="_blank">https://www.matsui.co.jp/first/flow/</a></div>
+<div class="url-item">3. <a href="https://www.matsui.co.jp/study/" target="_blank">https://www.matsui.co.jp/study/</a></div>
+<div class="url-item">4. <a href="https://www.matsui.co.jp/study/stock/" target="_blank">https://www.matsui.co.jp/study/stock/</a></div>
+<div class="url-item">5. <a href="https://www.matsui.co.jp/study/analyst/" target="_blank">https://www.matsui.co.jp/study/analyst/</a></div>
+<div class="url-item">6. <a href="https://www.matsui.co.jp/study/seminar/" target="_blank">https://www.matsui.co.jp/study/seminar/</a></div>
+<div class="url-item">7. <a href="https://www.matsui.co.jp/study/invest-lp/" target="_blank">https://www.matsui.co.jp/study/invest-lp/</a></div>
+<div class="url-item">8. <a href="https://www.matsui.co.jp/study/lifestyle/" target="_blank">https://www.matsui.co.jp/study/lifestyle/</a></div>
+<div class="url-item">9. <a href="https://www.matsui.co.jp/study/incentives/" target="_blank">https://www.matsui.co.jp/study/incentives/</a></div>
+<div class="url-item">10. <a href="https://www.matsui.co.jp/study/brand/" target="_blank">https://www.matsui.co.jp/study/brand/</a></div>
+<div class="url-item">11. <a href="https://www.matsui.co.jp/study/dividend/" target="_blank">https://www.matsui.co.jp/study/dividend/</a></div>
+<div class="url-item">12. <a href="https://www.matsui.co.jp/study/qa/" target="_blank">https://www.matsui.co.jp/study/qa/</a></div>
+<div class="url-item">13. <a href="https://www.matsui.co.jp/cm/" target="_blank">https://www.matsui.co.jp/cm/</a></div>
+<div class="url-item">14. <a href="https://www.matsui.co.jp/fee/" target="_blank">https://www.matsui.co.jp/fee/</a></div>
+<div class="url-item">15. <a href="https://www.matsui.co.jp/fee/other/" target="_blank">https://www.matsui.co.jp/fee/other/</a></div>
+<div class="url-item">16. <a href="https://www.matsui.co.jp/product/" target="_blank">https://www.matsui.co.jp/product/</a></div>
+<div class="url-item">17. <a href="https://www.matsui.co.jp/stock/" target="_blank">https://www.matsui.co.jp/stock/</a></div>
+<div class="url-item">18. <a href="https://www.matsui.co.jp/stock/apply/" target="_blank">https://www.matsui.co.jp/stock/apply/</a></div>
+<div class="url-item">19. <a href="https://www.matsui.co.jp/stock/procedures/" target="_blank">https://www.matsui.co.jp/stock/procedures/</a></div>
+<div class="url-item">20. <a href="https://www.matsui.co.jp/stock/ranking/" target="_blank">https://www.matsui.co.jp/stock/ranking/</a></div>
+<div class="url-item">21. <a href="https://www.matsui.co.jp/stock/domestic/" target="_blank">https://www.matsui.co.jp/stock/domestic/</a></div>
+<div class="url-item">22. <a href="https://www.matsui.co.jp/stock/domestic/fee/" target="_blank">https://www.matsui.co.jp/stock/domestic/fee/</a></div>
+<div class="url-item">23. <a href="https://www.matsui.co.jp/stock/domestic/list/" target="_blank">https://www.matsui.co.jp/stock/domestic/list/</a></div>
+<div class="url-item">24. <a href="https://www.matsui.co.jp/stock/domestic/rule/" target="_blank">https://www.matsui.co.jp/stock/domestic/rule/</a></div>
+<div class="url-item">25. <a href="https://www.matsui.co.jp/stock/domestic/tangen/" target="_blank">https://www.matsui.co.jp/stock/domestic/tangen/</a></div>
+<div class="url-item">26. <a href="https://www.matsui.co.jp/stock/domestic/seiripost/" target="_blank">https://www.matsui.co.jp/stock/domestic/seiripost/</a></div>
+<div class="url-item">27. <a href="https://www.matsui.co.jp/stock/margin/" target="_blank">https://www.matsui.co.jp/stock/margin/</a></div>
+<div class="url-item">28. <a href="https://www.matsui.co.jp/stock/margin/s-margin/" target="_blank">https://www.matsui.co.jp/stock/margin/s-margin/</a></div>
+<div class="url-item">29. <a href="https://www.matsui.co.jp/stock/margin/sh-margin/" target="_blank">https://www.matsui.co.jp/stock/margin/sh-margin/</a></div>
+<div class="url-item">30. <a href="https://www.matsui.co.jp/stock/margin/d-margin/" target="_blank">https://www.matsui.co.jp/stock/margin/d-margin/</a></div>
+<div class="url-item">31. <a href="https://www.matsui.co.jp/stock/margin/d-margin/difference/" target="_blank">https://www.matsui.co.jp/stock/margin/d-margin/difference/</a></div>
+<div class="url-item">32. <a href="https://www.matsui.co.jp/stock/margin/merit/" target="_blank">https://www.matsui.co.jp/stock/margin/merit/</a></div>
+<div class="url-item">33. <a href="https://www.matsui.co.jp/stock/margin/apply/" target="_blank">https://www.matsui.co.jp/stock/margin/apply/</a></div>
+<div class="url-item">34. <a href="https://www.matsui.co.jp/stock/margin/procedures/" target="_blank">https://www.matsui.co.jp/stock/margin/procedures/</a></div>
+<div class="url-item">35. <a href="https://www.matsui.co.jp/stock/ipo/" target="_blank">https://www.matsui.co.jp/stock/ipo/</a></div>
+<div class="url-item">36. <a href="https://www.matsui.co.jp/stock/ipo/about/" target="_blank">https://www.matsui.co.jp/stock/ipo/about/</a></div>
+<div class="url-item">37. <a href="https://www.matsui.co.jp/stock/ipo/fee/" target="_blank">https://www.matsui.co.jp/stock/ipo/fee/</a></div>
+<div class="url-item">38. <a href="https://www.matsui.co.jp/stock/ipo/list/" target="_blank">https://www.matsui.co.jp/stock/ipo/list/</a></div>
+<div class="url-item">39. <a href="https://www.matsui.co.jp/stock/ipo/po/" target="_blank">https://www.matsui.co.jp/stock/ipo/po/</a></div>
+<div class="url-item">40. <a href="https://www.matsui.co.jp/stock/ipo/rule/" target="_blank">https://www.matsui.co.jp/stock/ipo/rule/</a></div>
+<div class="url-item">41. <a href="https://www.matsui.co.jp/stock/ipo/juyou/" target="_blank">https://www.matsui.co.jp/stock/ipo/juyou/</a></div>
+<div class="url-item">42. <a href="https://www.matsui.co.jp/stock/ipo/kounyuu/" target="_blank">https://www.matsui.co.jp/stock/ipo/kounyuu/</a></div>
+<div class="url-item">43. <a href="https://www.matsui.co.jp/stock/kashikabu/" target="_blank">https://www.matsui.co.jp/stock/kashikabu/</a></div>
+<div class="url-item">44. <a href="https://www.matsui.co.jp/stock/kashikabu/about/" target="_blank">https://www.matsui.co.jp/stock/kashikabu/about/</a></div>
+<div class="url-item">45. <a href="https://www.matsui.co.jp/stock/kashikabu/list/" target="_blank">https://www.matsui.co.jp/stock/kashikabu/list/</a></div>
+<div class="url-item">46. <a href="https://www.matsui.co.jp/stock/kashikabu/rule/" target="_blank">https://www.matsui.co.jp/stock/kashikabu/rule/</a></div>
+<div class="url-item">47. <a href="https://www.matsui.co.jp/stock/kashikabu/apply/" target="_blank">https://www.matsui.co.jp/stock/kashikabu/apply/</a></div>
+<div class="url-item">48. <a href="https://www.matsui.co.jp/stock/bunbai/" target="_blank">https://www.matsui.co.jp/stock/bunbai/</a></div>
+<div class="url-item">49. <a href="https://www.matsui.co.jp/stock/bunbai/about/" target="_blank">https://www.matsui.co.jp/stock/bunbai/about/</a></div>
+<div class="url-item">50. <a href="https://www.matsui.co.jp/stock/bunbai/fee/" target="_blank">https://www.matsui.co.jp/stock/bunbai/fee/</a></div>
+<div class="url-item">51. <a href="https://www.matsui.co.jp/stock/bunbai/list/" target="_blank">https://www.matsui.co.jp/stock/bunbai/list/</a></div>
+<div class="url-item">52. <a href="https://www.matsui.co.jp/stock/bunbai/rule/" target="_blank">https://www.matsui.co.jp/stock/bunbai/rule/</a></div>
+<div class="url-item">53. <a href="https://www.matsui.co.jp/stock/etf-reit/" target="_blank">https://www.matsui.co.jp/stock/etf-reit/</a></div>
+<div class="url-item">54. <a href="https://www.matsui.co.jp/stock/etf-reit/etf/" target="_blank">https://www.matsui.co.jp/stock/etf-reit/etf/</a></div>
+<div class="url-item">55. <a href="https://www.matsui.co.jp/stock/etf-reit/etf/fee/" target="_blank">https://www.matsui.co.jp/stock/etf-reit/etf/fee/</a></div>
+<div class="url-item">56. <a href="https://www.matsui.co.jp/stock/etf-reit/etf/rule/" target="_blank">https://www.matsui.co.jp/stock/etf-reit/etf/rule/</a></div>
+<div class="url-item">57. <a href="https://www.matsui.co.jp/stock/etf-reit/etf/study/leverage_inverse/" target="_blank">https://www.matsui.co.jp/stock/etf-reit/etf/study/leverage_inverse/</a></div>
+<div class="url-item">58. <a href="https://www.matsui.co.jp/stock/etf-reit/reit/" target="_blank">https://www.matsui.co.jp/stock/etf-reit/reit/</a></div>
+<div class="url-item">59. <a href="https://www.matsui.co.jp/stock/etf-reit/reit/fee/" target="_blank">https://www.matsui.co.jp/stock/etf-reit/reit/fee/</a></div>
+<div class="url-item">60. <a href="https://www.matsui.co.jp/stock/etf-reit/reit/rule/" target="_blank">https://www.matsui.co.jp/stock/etf-reit/reit/rule/</a></div>
+<div class="url-item">61. <a href="https://www.matsui.co.jp/stock/etf-reit/etn/" target="_blank">https://www.matsui.co.jp/stock/etf-reit/etn/</a></div>
+<div class="url-item">62. <a href="https://www.matsui.co.jp/stock/etf-reit/etn/fee/" target="_blank">https://www.matsui.co.jp/stock/etf-reit/etn/fee/</a></div>
+<div class="url-item">63. <a href="https://www.matsui.co.jp/stock/etf-reit/etn/rule/" target="_blank">https://www.matsui.co.jp/stock/etf-reit/etn/rule/</a></div>
+<div class="url-item">64. <a href="https://www.matsui.co.jp/stock/special-order/" target="_blank">https://www.matsui.co.jp/stock/special-order/</a></div>
+<div class="url-item">65. <a href="https://www.matsui.co.jp/stock/special-order/about/" target="_blank">https://www.matsui.co.jp/stock/special-order/about/</a></div>
+<div class="url-item">66. <a href="https://www.matsui.co.jp/stock/special-order/rule/" target="_blank">https://www.matsui.co.jp/stock/special-order/rule/</a></div>
+<div class="url-item">67. <a href="https://www.matsui.co.jp/stock/best-match/" target="_blank">https://www.matsui.co.jp/stock/best-match/</a></div>
+<div class="url-item">68. <a href="https://www.matsui.co.jp/stock/best-match/about/" target="_blank">https://www.matsui.co.jp/stock/best-match/about/</a></div>
+<div class="url-item">69. <a href="https://www.matsui.co.jp/stock/best-match/rule/" target="_blank">https://www.matsui.co.jp/stock/best-match/rule/</a></div>
+<div class="url-item">70. <a href="https://www.matsui.co.jp/stock/best-match/fee/" target="_blank">https://www.matsui.co.jp/stock/best-match/fee/</a></div>
+<div class="url-item">71. <a href="https://www.matsui.co.jp/stock/best-match/apply/" target="_blank">https://www.matsui.co.jp/stock/best-match/apply/</a></div>
+<div class="url-item">72. <a href="https://www.matsui.co.jp/stock/pts/" target="_blank">https://www.matsui.co.jp/stock/pts/</a></div>
+<div class="url-item">73. <a href="https://www.matsui.co.jp/stock/pts/about/" target="_blank">https://www.matsui.co.jp/stock/pts/about/</a></div>
+<div class="url-item">74. <a href="https://www.matsui.co.jp/stock/pts/useful/" target="_blank">https://www.matsui.co.jp/stock/pts/useful/</a></div>
+<div class="url-item">75. <a href="https://www.matsui.co.jp/stock/pts/useful/nominal-price/" target="_blank">https://www.matsui.co.jp/stock/pts/useful/nominal-price/</a></div>
+<div class="url-item">76. <a href="https://www.matsui.co.jp/stock/pts/useful/pts-ranking/" target="_blank">https://www.matsui.co.jp/stock/pts/useful/pts-ranking/</a></div>
+<div class="url-item">77. <a href="https://www.matsui.co.jp/stock/pts/rule/" target="_blank">https://www.matsui.co.jp/stock/pts/rule/</a></div>
+<div class="url-item">78. <a href="https://www.matsui.co.jp/stock/cross-trade/" target="_blank">https://www.matsui.co.jp/stock/cross-trade/</a></div>
+<div class="url-item">79. <a href="https://www.matsui.co.jp/stock/cross-trade/rule/" target="_blank">https://www.matsui.co.jp/stock/cross-trade/rule/</a></div>
+<div class="url-item">80. <a href="https://www.matsui.co.jp/stock/study/" target="_blank">https://www.matsui.co.jp/stock/study/</a></div>
+<div class="url-item">81. <a href="https://www.matsui.co.jp/stock/study/about/stock.html" target="_blank">https://www.matsui.co.jp/stock/study/about/stock.html</a></div>
+<div class="url-item">82. <a href="https://www.matsui.co.jp/stock/study/about/merit.html" target="_blank">https://www.matsui.co.jp/stock/study/about/merit.html</a></div>
+<div class="url-item">83. <a href="https://www.matsui.co.jp/stock/study/about/settlement.html" target="_blank">https://www.matsui.co.jp/stock/study/about/settlement.html</a></div>
+<div class="url-item">84. <a href="https://www.matsui.co.jp/stock/study/about/choosing.html" target="_blank">https://www.matsui.co.jp/stock/study/about/choosing.html</a></div>
+<div class="url-item">85. <a href="https://www.matsui.co.jp/stock/study/about/funds.html" target="_blank">https://www.matsui.co.jp/stock/study/about/funds.html</a></div>
+<div class="url-item">86. <a href="https://www.matsui.co.jp/stock/study/about/prices.html" target="_blank">https://www.matsui.co.jp/stock/study/about/prices.html</a></div>
+<div class="url-item">87. <a href="https://www.matsui.co.jp/stock/study/about/step.html" target="_blank">https://www.matsui.co.jp/stock/study/about/step.html</a></div>
+<div class="url-item">88. <a href="https://www.matsui.co.jp/stock/study/about/rule.html" target="_blank">https://www.matsui.co.jp/stock/study/about/rule.html</a></div>
+<div class="url-item">89. <a href="https://www.matsui.co.jp/stock/study/about/risk.html" target="_blank">https://www.matsui.co.jp/stock/study/about/risk.html</a></div>
+<div class="url-item">90. <a href="https://www.matsui.co.jp/stock/study/special-order/" target="_blank">https://www.matsui.co.jp/stock/study/special-order/</a></div>
+<div class="url-item">91. <a href="https://www.matsui.co.jp/stock/study/qa/" target="_blank">https://www.matsui.co.jp/stock/study/qa/</a></div>
+<div class="url-item">92. <a href="https://www.matsui.co.jp/stock/study/margin/" target="_blank">https://www.matsui.co.jp/stock/study/margin/</a></div>
+<div class="url-item">93. <a href="https://www.matsui.co.jp/stock/study/etf/" target="_blank">https://www.matsui.co.jp/stock/study/etf/</a></div>
+<div class="url-item">94. <a href="https://www.matsui.co.jp/stock/study/reit/" target="_blank">https://www.matsui.co.jp/stock/study/reit/</a></div>
+<div class="url-item">95. <a href="https://www.matsui.co.jp/us-stock/" target="_blank">https://www.matsui.co.jp/us-stock/</a></div>
+<div class="url-item">96. <a href="https://www.matsui.co.jp/us-stock/holiday_us/" target="_blank">https://www.matsui.co.jp/us-stock/holiday_us/</a></div>
+<div class="url-item">97. <a href="https://www.matsui.co.jp/us-stock/ranking/" target="_blank">https://www.matsui.co.jp/us-stock/ranking/</a></div>
+<div class="url-item">98. <a href="https://www.matsui.co.jp/us-stock/domestic/" target="_blank">https://www.matsui.co.jp/us-stock/domestic/</a></div>
+<div class="url-item">99. <a href="https://www.matsui.co.jp/us-stock/domestic/fee/" target="_blank">https://www.matsui.co.jp/us-stock/domestic/fee/</a></div>
+<div class="url-item">100. <a href="https://www.matsui.co.jp/us-stock/domestic/list/" target="_blank">https://www.matsui.co.jp/us-stock/domestic/list/</a></div>
+<div class="url-item">101. <a href="https://www.matsui.co.jp/us-stock/domestic/rule/" target="_blank">https://www.matsui.co.jp/us-stock/domestic/rule/</a></div>
+<div class="url-item">102. <a href="https://www.matsui.co.jp/us-stock/domestic/apply/" target="_blank">https://www.matsui.co.jp/us-stock/domestic/apply/</a></div>
+<div class="url-item">103. <a href="https://www.matsui.co.jp/us-stock/domestic/procedures/" target="_blank">https://www.matsui.co.jp/us-stock/domestic/procedures/</a></div>
+<div class="url-item">104. <a href="https://www.matsui.co.jp/us-stock/margin/" target="_blank">https://www.matsui.co.jp/us-stock/margin/</a></div>
+<div class="url-item">105. <a href="https://www.matsui.co.jp/us-stock/margin/about/" target="_blank">https://www.matsui.co.jp/us-stock/margin/about/</a></div>
+<div class="url-item">106. <a href="https://www.matsui.co.jp/us-stock/margin/fee/" target="_blank">https://www.matsui.co.jp/us-stock/margin/fee/</a></div>
+<div class="url-item">107. <a href="https://www.matsui.co.jp/us-stock/margin/list/" target="_blank">https://www.matsui.co.jp/us-stock/margin/list/</a></div>
+<div class="url-item">108. <a href="https://www.matsui.co.jp/us-stock/margin/rule/" target="_blank">https://www.matsui.co.jp/us-stock/margin/rule/</a></div>
+<div class="url-item">109. <a href="https://www.matsui.co.jp/us-stock/margin/apply/" target="_blank">https://www.matsui.co.jp/us-stock/margin/apply/</a></div>
+<div class="url-item">110. <a href="https://www.matsui.co.jp/us-stock/margin/procedures/" target="_blank">https://www.matsui.co.jp/us-stock/margin/procedures/</a></div>
+<div class="url-item">111. <a href="https://www.matsui.co.jp/us-stock/etf/" target="_blank">https://www.matsui.co.jp/us-stock/etf/</a></div>
+<div class="url-item">112. <a href="https://www.matsui.co.jp/us-stock/etf/fee/" target="_blank">https://www.matsui.co.jp/us-stock/etf/fee/</a></div>
+<div class="url-item">113. <a href="https://www.matsui.co.jp/us-stock/etf/rule/" target="_blank">https://www.matsui.co.jp/us-stock/etf/rule/</a></div>
+<div class="url-item">114. <a href="https://www.matsui.co.jp/us-stock/study/" target="_blank">https://www.matsui.co.jp/us-stock/study/</a></div>
+<div class="url-item">115. <a href="https://www.matsui.co.jp/us-stock/study/article/" target="_blank">https://www.matsui.co.jp/us-stock/study/article/</a></div>
+<div class="url-item">116. <a href="https://www.matsui.co.jp/fund/" target="_blank">https://www.matsui.co.jp/fund/</a></div>
+<div class="url-item">117. <a href="https://www.matsui.co.jp/fund/card-investments/" target="_blank">https://www.matsui.co.jp/fund/card-investments/</a></div>
+<div class="url-item">118. <a href="https://www.matsui.co.jp/fund/fund-value-point/" target="_blank">https://www.matsui.co.jp/fund/fund-value-point/</a></div>
+<div class="url-item">119. <a href="https://www.matsui.co.jp/fund/fee/" target="_blank">https://www.matsui.co.jp/fund/fee/</a></div>
+<div class="url-item">120. <a href="https://www.matsui.co.jp/fund/past-list/" target="_blank">https://www.matsui.co.jp/fund/past-list/</a></div>
+<div class="url-item">121. <a href="https://www.matsui.co.jp/fund/roboadvisor/toushin-koubou/" target="_blank">https://www.matsui.co.jp/fund/roboadvisor/toushin-koubou/</a></div>
+<div class="url-item">122. <a href="https://www.matsui.co.jp/fund/roboadvisor/single/" target="_blank">https://www.matsui.co.jp/fund/roboadvisor/single/</a></div>
+<div class="url-item">123. <a href="https://www.matsui.co.jp/fund/roboadvisor/change/" target="_blank">https://www.matsui.co.jp/fund/roboadvisor/change/</a></div>
+<div class="url-item">124. <a href="https://www.matsui.co.jp/fund/rule/" target="_blank">https://www.matsui.co.jp/fund/rule/</a></div>
+<div class="url-item">125. <a href="https://www.matsui.co.jp/fund/apply/" target="_blank">https://www.matsui.co.jp/fund/apply/</a></div>
+<div class="url-item">126. <a href="https://www.matsui.co.jp/fund/transfer/" target="_blank">https://www.matsui.co.jp/fund/transfer/</a></div>
+<div class="url-item">127. <a href="https://www.matsui.co.jp/fund/procedures/" target="_blank">https://www.matsui.co.jp/fund/procedures/</a></div>
+<div class="url-item">128. <a href="https://www.matsui.co.jp/fund/study/" target="_blank">https://www.matsui.co.jp/fund/study/</a></div>
+<div class="url-item">129. <a href="https://www.matsui.co.jp/fx/" target="_blank">https://www.matsui.co.jp/fx/</a></div>
+<div class="url-item">130. <a href="https://www.matsui.co.jp/fx/relief/" target="_blank">https://www.matsui.co.jp/fx/relief/</a></div>
+<div class="url-item">131. <a href="https://www.matsui.co.jp/fx/spread/" target="_blank">https://www.matsui.co.jp/fx/spread/</a></div>
+<div class="url-item">132. <a href="https://www.matsui.co.jp/fx/margin-sim/" target="_blank">https://www.matsui.co.jp/fx/margin-sim/</a></div>
+<div class="url-item">133. <a href="https://www.matsui.co.jp/fx/list/" target="_blank">https://www.matsui.co.jp/fx/list/</a></div>
+<div class="url-item">134. <a href="https://www.matsui.co.jp/fx/fee/" target="_blank">https://www.matsui.co.jp/fx/fee/</a></div>
+<div class="url-item">135. <a href="https://www.matsui.co.jp/fx/rule/" target="_blank">https://www.matsui.co.jp/fx/rule/</a></div>
+<div class="url-item">136. <a href="https://www.matsui.co.jp/fx/apply/" target="_blank">https://www.matsui.co.jp/fx/apply/</a></div>
+<div class="url-item">137. <a href="https://www.matsui.co.jp/fx/procedures/" target="_blank">https://www.matsui.co.jp/fx/procedures/</a></div>
+<div class="url-item">138. <a href="https://www.matsui.co.jp/fx/study/" target="_blank">https://www.matsui.co.jp/fx/study/</a></div>
+<div class="url-item">139. <a href="https://www.matsui.co.jp/fx/market/" target="_blank">https://www.matsui.co.jp/fx/market/</a></div>
+<div class="url-item">140. <a href="https://www.matsui.co.jp/fop/" target="_blank">https://www.matsui.co.jp/fop/</a></div>
+<div class="url-item">141. <a href="https://www.matsui.co.jp/fop/merit/" target="_blank">https://www.matsui.co.jp/fop/merit/</a></div>
+<div class="url-item">142. <a href="https://www.matsui.co.jp/fop/futures/" target="_blank">https://www.matsui.co.jp/fop/futures/</a></div>
+<div class="url-item">143. <a href="https://www.matsui.co.jp/fop/d-futures/" target="_blank">https://www.matsui.co.jp/fop/d-futures/</a></div>
+<div class="url-item">144. <a href="https://www.matsui.co.jp/fop/options/" target="_blank">https://www.matsui.co.jp/fop/options/</a></div>
+<div class="url-item">145. <a href="https://www.matsui.co.jp/fop/losscut-account/" target="_blank">https://www.matsui.co.jp/fop/losscut-account/</a></div>
+<div class="url-item">146. <a href="https://www.matsui.co.jp/fop/apply/" target="_blank">https://www.matsui.co.jp/fop/apply/</a></div>
+<div class="url-item">147. <a href="https://www.matsui.co.jp/fop/procedures/" target="_blank">https://www.matsui.co.jp/fop/procedures/</a></div>
+<div class="url-item">148. <a href="https://www.matsui.co.jp/fop/study/" target="_blank">https://www.matsui.co.jp/fop/study/</a></div>
+<div class="url-item">149. <a href="https://www.matsui.co.jp/nisa/" target="_blank">https://www.matsui.co.jp/nisa/</a></div>
+<div class="url-item">150. <a href="https://www.matsui.co.jp/nisa/about/" target="_blank">https://www.matsui.co.jp/nisa/about/</a></div>
+<div class="url-item">151. <a href="https://www.matsui.co.jp/nisa/fee/" target="_blank">https://www.matsui.co.jp/nisa/fee/</a></div>
+<div class="url-item">152. <a href="https://www.matsui.co.jp/nisa/rule/" target="_blank">https://www.matsui.co.jp/nisa/rule/</a></div>
+<div class="url-item">153. <a href="https://www.matsui.co.jp/nisa/list/" target="_blank">https://www.matsui.co.jp/nisa/list/</a></div>
+<div class="url-item">154. <a href="https://www.matsui.co.jp/nisa/nisa2023/" target="_blank">https://www.matsui.co.jp/nisa/nisa2023/</a></div>
+<div class="url-item">155. <a href="https://www.matsui.co.jp/nisa/apply/" target="_blank">https://www.matsui.co.jp/nisa/apply/</a></div>
+<div class="url-item">156. <a href="https://www.matsui.co.jp/nisa/procedures/" target="_blank">https://www.matsui.co.jp/nisa/procedures/</a></div>
+<div class="url-item">157. <a href="https://www.matsui.co.jp/nisa/study/" target="_blank">https://www.matsui.co.jp/nisa/study/</a></div>
+<div class="url-item">158. <a href="https://www.matsui.co.jp/ideco/" target="_blank">https://www.matsui.co.jp/ideco/</a></div>
+<div class="url-item">159. <a href="https://www.matsui.co.jp/ideco/simulation/" target="_blank">https://www.matsui.co.jp/ideco/simulation/</a></div>
+<div class="url-item">160. <a href="https://www.matsui.co.jp/ideco/fee/" target="_blank">https://www.matsui.co.jp/ideco/fee/</a></div>
+<div class="url-item">161. <a href="https://www.matsui.co.jp/ideco/product/" target="_blank">https://www.matsui.co.jp/ideco/product/</a></div>
+<div class="url-item">162. <a href="https://www.matsui.co.jp/ideco/flow/" target="_blank">https://www.matsui.co.jp/ideco/flow/</a></div>
+<div class="url-item">163. <a href="https://www.matsui.co.jp/ideco/study/" target="_blank">https://www.matsui.co.jp/ideco/study/</a></div>
+<div class="url-item">164. <a href="https://www.matsui.co.jp/ideco/news/" target="_blank">https://www.matsui.co.jp/ideco/news/</a></div>
+<div class="url-item">165. <a href="https://www.matsui.co.jp/us-mmf/" target="_blank">https://www.matsui.co.jp/us-mmf/</a></div>
+<div class="url-item">166. <a href="https://www.matsui.co.jp/us-mmf/about/" target="_blank">https://www.matsui.co.jp/us-mmf/about/</a></div>
+<div class="url-item">167. <a href="https://www.matsui.co.jp/us-mmf/fee/" target="_blank">https://www.matsui.co.jp/us-mmf/fee/</a></div>
+<div class="url-item">168. <a href="https://www.matsui.co.jp/us-mmf/list/" target="_blank">https://www.matsui.co.jp/us-mmf/list/</a></div>
+<div class="url-item">169. <a href="https://www.matsui.co.jp/us-mmf/rule/" target="_blank">https://www.matsui.co.jp/us-mmf/rule/</a></div>
+<div class="url-item">170. <a href="https://www.matsui.co.jp/us-mmf/trend-info/" target="_blank">https://www.matsui.co.jp/us-mmf/trend-info/</a></div>
+<div class="url-item">171. <a href="https://www.matsui.co.jp/bank/" target="_blank">https://www.matsui.co.jp/bank/</a></div>
+<div class="url-item">172. <a href="https://www.matsui.co.jp/bank/apply/" target="_blank">https://www.matsui.co.jp/bank/apply/</a></div>
+<div class="url-item">173. <a href="https://www.matsui.co.jp/bank/activation/" target="_blank">https://www.matsui.co.jp/bank/activation/</a></div>
+<div class="url-item">174. <a href="https://www.matsui.co.jp/bank/product/" target="_blank">https://www.matsui.co.jp/bank/product/</a></div>
+<div class="url-item">175. <a href="https://www.matsui.co.jp/bank/faq/" target="_blank">https://www.matsui.co.jp/bank/faq/</a></div>
+<div class="url-item">176. <a href="https://www.matsui.co.jp/service/" target="_blank">https://www.matsui.co.jp/service/</a></div>
+<div class="url-item">177. <a href="https://www.matsui.co.jp/service/money/" target="_blank">https://www.matsui.co.jp/service/money/</a></div>
+<div class="url-item">178. <a href="https://www.matsui.co.jp/service/io/" target="_blank">https://www.matsui.co.jp/service/io/</a></div>
+<div class="url-item">179. <a href="https://www.matsui.co.jp/service/account/" target="_blank">https://www.matsui.co.jp/service/account/</a></div>
+<div class="url-item">180. <a href="https://www.matsui.co.jp/service/point/" target="_blank">https://www.matsui.co.jp/service/point/</a></div>
+<div class="url-item">181. <a href="https://www.matsui.co.jp/service/mail/" target="_blank">https://www.matsui.co.jp/service/mail/</a></div>
+<div class="url-item">182. <a href="https://www.matsui.co.jp/service/donation/" target="_blank">https://www.matsui.co.jp/service/donation/</a></div>
+<div class="url-item">183. <a href="https://www.matsui.co.jp/service/souzoku/" target="_blank">https://www.matsui.co.jp/service/souzoku/</a></div>
+<div class="url-item">184. <a href="https://www.matsui.co.jp/tool/" target="_blank">https://www.matsui.co.jp/tool/</a></div>
+<div class="url-item">185. <a href="https://www.matsui.co.jp/tool/stockapp/" target="_blank">https://www.matsui.co.jp/tool/stockapp/</a></div>
+<div class="url-item">186. <a href="https://www.matsui.co.jp/tool/us_stockapp/" target="_blank">https://www.matsui.co.jp/tool/us_stockapp/</a></div>
+<div class="url-item">187. <a href="https://www.matsui.co.jp/tool/fundapp/" target="_blank">https://www.matsui.co.jp/tool/fundapp/</a></div>
+<div class="url-item">188. <a href="https://www.matsui.co.jp/fx/tool/sp/fxapp/" target="_blank">https://www.matsui.co.jp/fx/tool/sp/fxapp/</a></div>
+<div class="url-item">189. <a href="https://www.matsui.co.jp/tool/futuresapp/" target="_blank">https://www.matsui.co.jp/tool/futuresapp/</a></div>
+<div class="url-item">190. <a href="https://www.matsui.co.jp/tool/bank/" target="_blank">https://www.matsui.co.jp/tool/bank/</a></div>
+<div class="url-item">191. <a href="https://www.matsui.co.jp/tool/simulator/" target="_blank">https://www.matsui.co.jp/tool/simulator/</a></div>
+<div class="url-item">192. <a href="https://www.matsui.co.jp/tool/kabutouch/" target="_blank">https://www.matsui.co.jp/tool/kabutouch/</a></div>
+<div class="url-item">193. <a href="https://www.matsui.co.jp/tool/market-lab/" target="_blank">https://www.matsui.co.jp/tool/market-lab/</a></div>
+<div class="url-item">194. <a href="https://www.matsui.co.jp/tool/ns-highspeed/" target="_blank">https://www.matsui.co.jp/tool/ns-highspeed/</a></div>
+<div class="url-item">195. <a href="https://www.matsui.co.jp/tool/alexa/" target="_blank">https://www.matsui.co.jp/tool/alexa/</a></div>
+<div class="url-item">196. <a href="https://www.matsui.co.jp/fx/tool/pc/netfx-trader_plus/" target="_blank">https://www.matsui.co.jp/fx/tool/pc/netfx-trader_plus/</a></div>
+<div class="url-item">197. <a href="https://www.matsui.co.jp/tool/kabuka-board/" target="_blank">https://www.matsui.co.jp/tool/kabuka-board/</a></div>
+<div class="url-item">198. <a href="https://www.matsui.co.jp/tool/chartfolio/" target="_blank">https://www.matsui.co.jp/tool/chartfolio/</a></div>
+<div class="url-item">199. <a href="https://www.matsui.co.jp/tool/full-board/" target="_blank">https://www.matsui.co.jp/tool/full-board/</a></div>
+<div class="url-item">200. <a href="https://www.matsui.co.jp/tool/quick-info/" target="_blank">https://www.matsui.co.jp/tool/quick-info/</a></div>
+<div class="url-item">201. <a href="https://www.matsui.co.jp/tool/research-net/" target="_blank">https://www.matsui.co.jp/tool/research-net/</a></div>
+<div class="url-item">202. <a href="https://www.matsui.co.jp/tool/ns-trader/" target="_blank">https://www.matsui.co.jp/tool/ns-trader/</a></div>
+<div class="url-item">203. <a href="https://www.matsui.co.jp/tool/nst-premium/" target="_blank">https://www.matsui.co.jp/tool/nst-premium/</a></div>
+<div class="url-item">204. <a href="https://www.matsui.co.jp/tool/requirement/" target="_blank">https://www.matsui.co.jp/tool/requirement/</a></div>
+<div class="url-item">205. <a href="https://www.matsui.co.jp/support/" target="_blank">https://www.matsui.co.jp/support/</a></div>
+<div class="url-item">206. <a href="https://www.matsui.co.jp/support/movie_guide/" target="_blank">https://www.matsui.co.jp/support/movie_guide/</a></div>
+<div class="url-item">207. <a href="https://www.matsui.co.jp/support/guidebook/" target="_blank">https://www.matsui.co.jp/support/guidebook/</a></div>
+<div class="url-item">208. <a href="https://www.matsui.co.jp/support/contact/" target="_blank">https://www.matsui.co.jp/support/contact/</a></div>
+<div class="url-item">209. <a href="https://www.matsui.co.jp/support/contact/remote-support/" target="_blank">https://www.matsui.co.jp/support/contact/remote-support/</a></div>
+<div class="url-item">210. <a href="https://www.matsui.co.jp/support/contact/consultation/" target="_blank">https://www.matsui.co.jp/support/contact/consultation/</a></div>
+<div class="url-item">211. <a href="https://www.matsui.co.jp/support/tax/" target="_blank">https://www.matsui.co.jp/support/tax/</a></div>
+<div class="url-item">212. <a href="https://www.matsui.co.jp/support/inheritance/" target="_blank">https://www.matsui.co.jp/support/inheritance/</a></div>
+<div class="url-item">213. <a href="https://www.matsui.co.jp/support/resist_info/" target="_blank">https://www.matsui.co.jp/support/resist_info/</a></div>
+<div class="url-item">214. <a href="https://www.matsui.co.jp/support/security/" target="_blank">https://www.matsui.co.jp/support/security/</a></div>
+<div class="url-item">215. <a href="https://www.matsui.co.jp/support/system/" target="_blank">https://www.matsui.co.jp/support/system/</a></div>
+<div class="url-item">216. <a href="https://www.matsui.co.jp/support/request/" target="_blank">https://www.matsui.co.jp/support/request/</a></div>
+<div class="url-item">217. <a href="https://www.matsui.co.jp/support/prize/" target="_blank">https://www.matsui.co.jp/support/prize/</a></div>
+<div class="url-item">218. <a href="https://www.matsui.co.jp/market/" target="_blank">https://www.matsui.co.jp/market/</a></div>
+<div class="url-item">219. <a href="https://finance.matsui.co.jp/" target="_blank">https://finance.matsui.co.jp/</a></div>
+<div class="url-item">220. <a href="https://finance.matsui.co.jp/screening/index" target="_blank">https://finance.matsui.co.jp/screening/index</a></div>
+<div class="url-item">221. <a href="https://finance.matsui.co.jp/stock/index" target="_blank">https://finance.matsui.co.jp/stock/index</a></div>
+<div class="url-item">222. <a href="https://finance.matsui.co.jp/find-by-schedule/index" target="_blank">https://finance.matsui.co.jp/find-by-schedule/index</a></div>
+<div class="url-item">223. <a href="https://finance.matsui.co.jp/ranking-rise/index" target="_blank">https://finance.matsui.co.jp/ranking-rise/index</a></div>
+<div class="url-item">224. <a href="https://finance.matsui.co.jp/complimentary/index" target="_blank">https://finance.matsui.co.jp/complimentary/index</a></div>
+<div class="url-item">225. <a href="https://finance.matsui.co.jp/etf/index" target="_blank">https://finance.matsui.co.jp/etf/index</a></div>
+<div class="url-item">226. <a href="https://finance.matsui.co.jp/reit/index" target="_blank">https://finance.matsui.co.jp/reit/index</a></div>
+<div class="url-item">227. <a href="https://finance.matsui.co.jp/ipo/index" target="_blank">https://finance.matsui.co.jp/ipo/index</a></div>
+<div class="url-item">228. <a href="https://finance.matsui.co.jp/stock-list/index" target="_blank">https://finance.matsui.co.jp/stock-list/index</a></div>
+<div class="url-item">229. <a href="https://finance.matsui.co.jp/future/index" target="_blank">https://finance.matsui.co.jp/future/index</a></div>
+<div class="url-item">230. <a href="https://finance.matsui.co.jp/fx/index" target="_blank">https://finance.matsui.co.jp/fx/index</a></div>
+<div class="url-item">231. <a href="https://finance.matsui.co.jp/bonds/index" target="_blank">https://finance.matsui.co.jp/bonds/index</a></div>
+<div class="url-item">232. <a href="https://finance.matsui.co.jp/news/index" target="_blank">https://finance.matsui.co.jp/news/index</a></div>
+<div class="url-item">233. <a href="https://fund.matsui.co.jp/fund/beginner.html" target="_blank">https://fund.matsui.co.jp/fund/beginner.html</a></div>
+<div class="url-item">234. <a href="https://fund.matsui.co.jp/fund/search/beginner.html" target="_blank">https://fund.matsui.co.jp/fund/search/beginner.html</a></div>
+<div class="url-item">235. <a href="https://fund.matsui.co.jp/fund/search/list/index.html" target="_blank">https://fund.matsui.co.jp/fund/search/list/index.html</a></div>
+<div class="url-item">236. <a href="https://fund.matsui.co.jp/fund/ranking/index.html" target="_blank">https://fund.matsui.co.jp/fund/ranking/index.html</a></div>
+<div class="url-item">237. <a href="https://www.matsui.co.jp/news/2025/" target="_blank">https://www.matsui.co.jp/news/2025/</a></div>
+<div class="url-item">238. <a href="https://www.matsui.co.jp/campaign/" target="_blank">https://www.matsui.co.jp/campaign/</a></div>
+<div class="url-item">239. <a href="https://www.matsui.co.jp/company/" target="_blank">https://www.matsui.co.jp/company/</a></div>
+<div class="url-item">240. <a href="https://www.matsui.co.jp/company/information/" target="_blank">https://www.matsui.co.jp/company/information/</a></div>
+<div class="url-item">241. <a href="https://www.matsui.co.jp/company/ir/" target="_blank">https://www.matsui.co.jp/company/ir/</a></div>
+<div class="url-item">242. <a href="https://www.matsui.co.jp/company/sustainability/" target="_blank">https://www.matsui.co.jp/company/sustainability/</a></div>
+<div class="url-item">243. <a href="https://www.matsui.co.jp/company/press/" target="_blank">https://www.matsui.co.jp/company/press/</a></div>
+<div class="url-item">244. <a href="https://www.matsui.co.jp/company/recruit/" target="_blank">https://www.matsui.co.jp/company/recruit/</a></div>
+<div class="url-item">245. <a href="https://www.matsui.co.jp/apply/" target="_blank">https://www.matsui.co.jp/apply/</a></div>
+<div class="url-item">246. <a href="https://www.matsui.co.jp/login/" target="_blank">https://www.matsui.co.jp/login/</a></div>
+<div class="url-item">247. <a href="https://www.matsui.co.jp/service/regulation/" target="_blank">https://www.matsui.co.jp/service/regulation/</a></div>
+<div class="url-item">248. <a href="https://www.matsui.co.jp/utility/rule/canvass.html" target="_blank">https://www.matsui.co.jp/utility/rule/canvass.html</a></div>
+<div class="url-item">249. <a href="https://www.matsui.co.jp/utility/rule/policy.html" target="_blank">https://www.matsui.co.jp/utility/rule/policy.html</a></div>
+<div class="url-item">250. <a href="https://www.matsui.co.jp/utility/rule/google_analytics.html" target="_blank">https://www.matsui.co.jp/utility/rule/google_analytics.html</a></div>
+<div class="url-item">251. <a href="https://www.matsui.co.jp/utility/rule/privacy.html" target="_blank">https://www.matsui.co.jp/utility/rule/privacy.html</a></div>
+<div class="url-item">252. <a href="https://www.matsui.co.jp/tool/ns-highspeed/requirement/" target="_blank">https://www.matsui.co.jp/tool/ns-highspeed/requirement/</a></div>
+<div class="url-item">253. <a href="https://www.matsui.co.jp/utility/sns/" target="_blank">https://www.matsui.co.jp/utility/sns/</a></div>
+<div class="url-item">254. <a href="https://www.matsui.co.jp/utility/sitemap/" target="_blank">https://www.matsui.co.jp/utility/sitemap/</a></div>
+</div>
+    
+    <div class="footer">
+        このレポートはファクトチェックツールにより自動生成されました。<br>
+        修正提案は参考情報です。最終的な判断は担当者が行ってください。
+    </div>
+</div>
+</body>
+</html>
